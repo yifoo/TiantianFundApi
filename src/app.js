@@ -2,6 +2,7 @@ const koa = require('koa');
 const Router = require('@koa/router');
 const { log } = require('./utils/log');
 const { getModules } = require('./utils');
+const cors= require('koa2-cors');
 
 function startServe() {
   return new Promise((resolve) => {
@@ -24,7 +25,7 @@ function startServe() {
       });
     });
 
-    app.use(router.routes()).use(router.allowedMethods());
+    app.use(router.routes()).use(router.allowedMethods()).use(cors());
 
     const server = app.listen(3002, () => {
       log('🚀 server is running at port 3002');
