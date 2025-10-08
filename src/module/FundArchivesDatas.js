@@ -18,7 +18,7 @@ module.exports = async (params = {}) => {
       rankNo: parseInt($($cells[0]).text().trim()),//占比排名
       code: $($cells[1]).text().trim(),//股票代码
       stockName: $($cells[2]).text().trim(),//股票名称
-      ratio: $($cells[6]).text().trim(), //占净值比例
+      ratio: $($cells[6]).text().trim().slice(0,-1), //占净值比例
       shares: parseFloat($($cells[7]).text().trim()).toFixed(2),//持股数（万股）
       money: parseFloat($($cells[8]).text().trim().replace(/,/g, ''))//持仓市值（万元）
     });
