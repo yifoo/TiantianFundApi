@@ -38,11 +38,11 @@ module.exports = async (params = {}) => {
     stockTypeList.set(resp.data.diff[0].f12,{typeCode:resp.data.diff[1].f12,typeName:resp.data.diff[1].f14}) 
     }
   }
+  const sumRadio=0
   // 遍历 arr 数组，根据 fcode 匹配并添加 price 和 rate
   data.forEach(item => {
     const matchedItem = result.get(item.fcode);
     const matchedTypeItem = stockTypeList.get(item.code);
-    console.log('matchedTypeItem: ', matchedTypeItem);
     if (matchedItem) {
       item.price = matchedItem.f2;//最新价格
       item.rate = matchedItem.f3;// 涨跌幅
@@ -51,10 +51,12 @@ module.exports = async (params = {}) => {
       item.typeCode = matchedTypeItem.typeCode;
       item.typeName = matchedTypeItem.typeName;
     }
+    sumRadio+=parseFloat(item.radio)
   });
   
   return {
     code:200,
     data,
+    sumRadio
   }
 };
