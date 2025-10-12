@@ -51,12 +51,12 @@ module.exports = async (params = {}) => {
       item.typeCode = matchedTypeItem.typeCode;
       item.typeName = matchedTypeItem.typeName;
     }
-    sumRadio+=parseFloat(item.radio)
+    sumRadio+=parseFloat(item.ratio||0)
   });
   
   return {
     code:200,
     data,
-    sumRadio
+    sumRadio:sumRadio.toFixed(2)
   }
 };
