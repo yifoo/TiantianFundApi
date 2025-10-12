@@ -38,7 +38,7 @@ module.exports = async (params = {}) => {
     stockTypeList.set(resp.data.diff[0].f12,{typeCode:resp.data.diff[1].f12,typeName:resp.data.diff[1].f14}) 
     }
   }
-  const sumRadio=0
+  let sumRadio=0
   // 遍历 arr 数组，根据 fcode 匹配并添加 price 和 rate
   data.forEach(item => {
     const matchedItem = result.get(item.fcode);
