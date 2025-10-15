@@ -1,5 +1,4 @@
 const { request } = require('../utils/index.js');
-const { jsonp } = require('../utils/index.js');
 
 /**
  * 获取基金持仓数据
