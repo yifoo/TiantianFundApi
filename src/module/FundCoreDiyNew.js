@@ -5,7 +5,7 @@ const { post } = require('../utils/index.js');
  */
 module.exports = async (params = {}) => {
   const url = `https://fundcomapi.tiantianfunds.com/mm/newCore/FundCoreDiyNew`;
-  params.FIELDS="SHORTNAME,RZDF,DWJZ,LJJZ,FSRQ,ISBUY,FTYPE,FCODE"
+  params.FIELDS = "SHORTNAME,RZDF,DWJZ,LJJZ,FSRQ,ISBUY,FTYPE,FCODE"
   let resp = await post(url, params);
-    return resp
+  return resp
 };
