@@ -1,7 +1,7 @@
 const { post } = require('../utils/index.js');
 
 /**
- * 获取基金持仓净值及幅度
+ * 批量获取基金净值及幅度
  */
 module.exports = async (params = {}) => {
   const url = `https://fundcomapi.tiantianfunds.com/mm/FundFavor/FundFavorInfo`;
