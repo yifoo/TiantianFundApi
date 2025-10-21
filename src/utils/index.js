@@ -53,6 +53,14 @@ const post = async (url, data) => {
   return res.data;
 };
 
+const xjPost = async (url, data) => {
+  const res = await axios.post(
+    url,
+    data
+  );
+  return res.data;
+};
+
 // 发送 jsonp 请求
 const jsonp = async (url, callback, params) => {
   const res = await axios(url, { params });
@@ -90,4 +98,5 @@ module.exports = {
   jsonp,
   getModules,
   sse,
+  xjPost
 };
