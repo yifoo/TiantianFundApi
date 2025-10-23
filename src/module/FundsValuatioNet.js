@@ -5,12 +5,8 @@ const { xjPost } = require('../utils/index.js');
  */
 module.exports = async (params = {}) => {
   const url = `https://api.xiaobeiyangji.com/yangji-api/api/get-optional-change-nav`;
-  let data = JSON.parse(params.codeList)
-  data.map(item => {
-    return `"${String(item)}"`
-  })
   let resp = await xjPost(url, {
-    codeArr: JSON.parse(`["${data.join('","')}"]`),
+    codeArr: JSON.parse(params.codeList),
     valuationDate: params.date,
     navDate: params.date,
     isTD: true,
