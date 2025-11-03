@@ -899,7 +899,50 @@
 
 ### 获取基金净值
 
-**路由**
+#### 1. 路由（推荐）
+
+`/FundVPageAccV2`
+
+##### 参数
+
+`fcode` 基金code
+
+`indexCode` 对比的指数code
+
+##### 结果
+
+```json
+{
+  "data":{
+		"PDATE": "2023-03-30",//净值日期
+		"YIELD": "-0.1",//基金净值
+		"INDEXYIELD": "-0.06",//指数净值
+		"FUNDTYPEYIELD": "1.86",//同类平均净值
+		"BENCHQUOTE": "5.71"
+	},
+  "errorCode": 0,
+	"firstError": null,
+	"success": true,
+	"hasWrongToken": null,
+	"totalCount": 553,
+  "expansion":{// 净值解释
+    "aboutAcc":[
+      {"code":"016702","name":"银华海外数字经济量化选股混合发起式(QDII)C"},
+      {"code":"DC3007002","name":"东财QDII-混合偏股指数"},	
+      {"code":"000001","name":"上证指数"}],
+    "changeInfo":[
+      {"STYPE":"31","BONUS":null,"ACC":null,"FSRQ":"2024-12-16"},
+      {"STYPE":"32","BONUS":null,"ACC":null,"FSRQ":"2025-04-08"}
+    ],
+    "syl":"73.75",
+    "MAXRETRA":"25.9296"},
+  "jf":"pj"}
+}
+```
+
+
+
+#### **2.路由**
 
 `/fundVPageDiagram`
 
@@ -930,6 +973,7 @@
 ```
 
 ### 获取基金净值估算（实时）
+
 官方限制非指数类暂停基金净值估算展示。
 **路由**
 
