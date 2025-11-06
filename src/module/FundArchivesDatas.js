@@ -34,29 +34,27 @@ module.exports = async (params = {}) => {
   });
   codeList = codeList.split(",")
   // console.log('codeList: ', codeList);
-  // let stockTypeList = new Map();
-  // for (let i of codeList) {
-  //   if (i) {
-  //     let resp = await request(`https://push2.eastmoney.com/api/qt/slist/get?fltt=1&invt=2&fields=f9,f12,f13,f14&pn=1&np=1&spt=1`, { secid: i });
-  //     console.log('resp: ', resp.data.diff[0], resp.data.diff[1]);
-  //     stockTypeList.set(resp.data.diff[0].f12, { typeCode: resp.data.diff[1].f12, typeName: resp.data.diff[1].f14 })
-  //   }
-  // }
+  let stockTypeList = new Map();
+  for (let i of codeList) {
+    if (i) {
+      let resp = await request(`https://push2.eastmoney.com/api/qt/slist/get?fltt=1&invt=2&fields=f9,f12,f13,f14&pn=1&np=1&spt=1`, { secid: i });
+      console.log('resp: ', resp.data.diff[0], resp.data.diff[1]);
+      stockTypeList.set(resp.data.diff[0].f12, { typeCode: resp.data.diff[1].f12, typeName: resp.data.diff[1].f14 })
+    }
+  }
   let sumRadio = 0
   // 遍历 arr 数组，根据 fcode 匹配并添加 price 和 rate
   data.forEach(item => {
     const matchedItem = result.get(item.fcode);
-    // const matchedTypeItem = stockTypeList.get(item.code);
+    const matchedTypeItem = stockTypeList.get(item.code);
     if (matchedItem) {
       item.price = matchedItem.f2;//最新价格
-      item.rate = matchedItem.f3;// 持仓占比
-      item.typeCode = matchedItem.f12;
-      item.typeName = matchedItem.f14;
+      item.rate = matchedItem.f3;// 
     }
-    // if (matchedTypeItem) {
-    //   item.typeCode = matchedTypeItem.typeCode;
-    //   item.typeName = matchedTypeItem.typeName;
-    // }
+    if (matchedTypeItem) {
+      item.typeCode = matchedTypeItem.typeCode;
+      item.typeName = matchedTypeItem.typeName;
+    }
     sumRadio += parseFloat(item.ratio || 0)
   });
 
