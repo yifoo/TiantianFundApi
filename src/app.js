@@ -30,7 +30,7 @@ function startServe() {
         // 动态匹配允许的域名
         const allowedOrigins = [
           'https://www.haohome.top',
-          'http://localhost:8080'
+          'http://localhost:8000'
         ];
         const origin = ctx.request.header.origin;
         return allowedOrigins.includes(origin) ? origin : false;
