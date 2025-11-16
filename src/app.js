@@ -25,12 +25,7 @@ function startServe() {
       });
     });
 
-    app.use(router.routes()).use(router.allowedMethods()).use(cors({
-      origin: () => '*',
-      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-      // 下面这条加上才能共享跨域session，同时前端ajax请求也要加上响应的参数
-      credentials: true,
-    }));
+    app.use(router.routes()).use(router.allowedMethods()).use(cors());
 
     const server = app.listen(3002, () => {
       log('🚀 server is running at port 3002');
