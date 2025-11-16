@@ -35,7 +35,7 @@ function startServe() {
         const origin = ctx.request.header.origin;
         return allowedOrigins.includes(origin) ? origin : false;
       },
-      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+      allowMethods: ['GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'],
       // 下面这条加上才能共享跨域session，同时前端ajax请求也要加上响应的参数
       credentials: true,
     }));
