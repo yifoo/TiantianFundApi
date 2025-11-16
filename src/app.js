@@ -2,7 +2,7 @@ const koa = require('koa');
 const Router = require('@koa/router');
 const { log } = require('./utils/log');
 const { getModules } = require('./utils');
-const cors= require('koa2-cors');
+const cors = require('koa2-cors');
 
 function startServe() {
   return new Promise((resolve) => {
@@ -25,7 +25,12 @@ function startServe() {
       });
     });
 
-    app.use(router.routes()).use(router.allowedMethods()).use(cors());
+    app.use(router.routes()).use(router.allowedMethods()).use(cors({
+      origin: () => '*',
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+      // 下面这条加上才能共享跨域session，同时前端ajax请求也要加上响应的参数
+      credentials: true,
+    }));
 
     const server = app.listen(3002, () => {
       log('🚀 server is running at port 3002');

@@ -23,12 +23,13 @@ const baseData = {
 // 发送请求
 const request = async (url, params) => {
   try {
-    const res = await axios(url, {
+    const res = await axios.get(url, {
       headers,
       params: {
         ...baseData,
         ...params,
       },
+      timeout: 10000
     });
     return res.data;
   } catch (e) {
@@ -64,7 +65,6 @@ const xjPost = async (url, data) => {
 // 发送 jsonp 请求
 const jsonp = async (url, callback, params) => {
   const res = await axios(url, { params });
-  console.log('res: ', res);
   const js = res.data.replace(/[\n]/g, '').replace(/\r/g, '');
   return JSON.parse(js.slice(callback.length + 1, js.length - 1));
 };
