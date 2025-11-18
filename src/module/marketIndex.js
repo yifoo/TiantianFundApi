@@ -7,8 +7,12 @@ module.exports = async (params = {}, ctx) => {
   const url = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
   params.secids = params.secids;
   //* 需指数对应代码："1.000001,0.399001"
-  params.fields = 'f2,f3,f4,f12,f13,f14,f104,f105,f106'
+  params.fields = 'f2,f3,f4,f6,f12,f13,f14,f104,f105,f106'
   params.fltt = 2
+  // f6- 交易规模
+  // f104 涨的家数
+  // f105 跌的家数
+  // f104 平的家数
   //f12 - 代码
   // f13 - 市场类型
   // f14 - 名称
