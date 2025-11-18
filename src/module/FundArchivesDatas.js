@@ -25,7 +25,11 @@ module.exports = async (params = {}) => {
   })
   let codeList = $("#gpdmList").text()
   // console.log('codeList: ', codeList);
-  const resp2 = await request(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f12,f14`, { secids: codeList });
+  const resp2 = await request(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f7,f8,f9,f11,f12,f13,f14`, { secids: codeList });
+  //* f2:股价
+  //* f3:涨幅
+  //* f12:股票code
+  //* f14:股票名称
   const fundsPriceLimit = resp2.data.diff
   // console.log('fundsPriceLimit: ', fundsPriceLimit);
   const result = new Map();
@@ -33,19 +37,17 @@ module.exports = async (params = {}) => {
     result.set(item.f12, item);
   });
   codeList = codeList.split(",")
-  // console.log('codeList: ', codeList);
   let stockTypeList = new Map();
   for (let i of codeList) {
     if (i) {
       let resp = await request(`https://push2.eastmoney.com/api/qt/slist/get?fltt=1&invt=2&fields=f9,f12,f13,f14&pn=1&np=1&spt=1`, { secid: i });
-      console.log('resp: ', resp.data.diff[0], resp.data.diff[1]);
       stockTypeList.set(resp.data.diff[0].f12, { typeCode: resp.data.diff[1].f12, typeName: resp.data.diff[1].f14 })
     }
   }
   let sumRadio = 0
   // 遍历 arr 数组，根据 fcode 匹配并添加 price 和 rate
   data.forEach(item => {
-    const matchedItem = result.get(item.fcode);
+    const matchedItem = result.get(item.code);
     const matchedTypeItem = stockTypeList.get(item.code);
     if (matchedItem) {
       item.price = matchedItem.f2;//最新价格
