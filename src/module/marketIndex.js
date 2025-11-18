@@ -3,7 +3,7 @@ const { request } = require('../utils/index.js');
 /**
  * 获取主题焦点列表
  */
-module.exports = (params = {}, ctx) => {
+module.exports = async (params = {}, ctx) => {
   const url = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
   params.secids = params.secids;
   //* 需指数对应代码："1.000001,0.399001"
@@ -15,5 +15,9 @@ module.exports = (params = {}, ctx) => {
   // f2 - 最新价
   // f4 - 涨跌幅
   // f3 - 涨跌额
-  return request(url, params);
+  let res = await request(url, params);
+  return {
+    code: 200,
+    data: res.data
+  }
 };
