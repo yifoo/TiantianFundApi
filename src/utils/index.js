@@ -39,6 +39,24 @@ const request = async (url, params) => {
     }
   }
 };
+const get = async (url, params, header) => {
+  try {
+    const res = await axios.get(url, {
+      headers: { ...headers, ...header },
+      params: {
+        ...baseData,
+        ...params,
+      },
+      timeout: 10000
+    });
+    return res.data;
+  } catch (e) {
+    return {
+      code: 400,
+      error: e
+    }
+  }
+};
 
 const post = async (url, data) => {
   const res = await axios.post(
@@ -98,5 +116,6 @@ module.exports = {
   jsonp,
   getModules,
   sse,
+  get,
   xjPost
 };
