@@ -5,7 +5,7 @@ const { request } = require('../utils/index.js');
  */
 module.exports = async (params = {}, ctx) => {
   const url = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
-  params.secids = params.secids;
+  // params.secids = params.secids;
   //* 需指数对应代码："1.000001,0.399001"
   params.fields = 'f2,f3,f4,f6,f12,f13,f14,f104,f105,f106'
   params.fltt = 2
@@ -22,6 +22,6 @@ module.exports = async (params = {}, ctx) => {
   let res = await request(url, params);
   return {
     code: 200,
-    data: res.data
+    data: res.data || {}
   }
 };
