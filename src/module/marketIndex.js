@@ -52,6 +52,7 @@ module.exports = async (params = {}, ctx) => {
   try {
     console.log('params: ', params);
     let res = await get(url, { params, header });
+    console.log('res: ', res);
     return {
       code: 200,
       data: res.data || {}
