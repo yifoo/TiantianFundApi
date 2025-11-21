@@ -26,9 +26,14 @@ module.exports = async (params = {}, ctx) => {
     "Sec-Fetch-Mode": "no-cors",
     "Sec-Fetch-Site": "same-site"
   }
-  let res = await get(url, params, header);
-  return {
-    code: 200,
-    data: res.data || {}
+  try {
+    let res = await get(url, params, header);
+    return {
+      code: 200,
+      data: res || {}
+    }
+  } catch (e) {
+    console.log('e: ', e);
+
   }
 };
