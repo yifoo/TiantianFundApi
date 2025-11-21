@@ -43,8 +43,7 @@ module.exports = async (params = {}, ctx) => {
     Host: "push2.eastmoney.com",
     Referer: "https://quote.eastmoney.com/center/qqzs.html",
     "Sec-Fetch-Dest": "script",
-    "Sec-Fetch-Mode": "no-cors",
-    "Sec-Fetch-Site": "same-site",
+    "Sec-Fetch-Mode": "cors",
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
     "sec-ch-ua": '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
     "sec-ch-ua-mobile": "?0",
@@ -56,6 +55,10 @@ module.exports = async (params = {}, ctx) => {
     'x-scheme': 'https',
     connection: 'upgrade',
     'user-agent': 'Apifox/1.0.0 (https://apifox.com)',
+    "Sec-Fetch-Site": "cross-site",
+    "Origin": null,
+    "User-Agent": "Mozilla/5.0 (iPad; CPU OS 17_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) onmac color=w eastmoney_ios appversion_10.34.1 pkg=com.eastmoney.ipad mainBagVersion=10.34.1 statusBarHeight=20.000000 titleBarHeight=44.000000 density=2.000000 fontsize=2 listFontSize=1 adaptAgedSwitch=0 dynamicIsland=0 tag=C49A7A0FFD187D64",
+    "Sec-Fetch-Dest": "empty"
   }
   try {
     console.log('params: ', params, ctx.request.header);
