@@ -48,11 +48,18 @@ module.exports = async (params = {}, ctx) => {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
     "sec-ch-ua": '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
     "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "macOS"
+    "sec-ch-ua-platform": "macOS",
+    'x-real-ip': '123.138.73.98',
+    'x-forwarded-for': '123.138.73.98',
+    'remote-host': '123.138.73.98',
+    'x-host': 'funds.haohome.top:443',
+    'x-scheme': 'https',
+    connection: 'upgrade',
+    'user-agent': 'Apifox/1.0.0 (https://apifox.com)',
   }
   try {
     console.log('params: ', params, ctx.request.header);
-    let res = await get(url, {}, ctx.request.header);
+    let res = await get(url, {}, header);
     return {
       code: 200,
       data: res || {}
