@@ -43,10 +43,7 @@ const get = async (url, params, header) => {
   try {
     const res = await axios.get(url, {
       headers: { ...headers, ...header },
-      params: {
-        ...baseData,
-        ...params,
-      },
+      params,
       timeout: 10000
     });
     return res.data;

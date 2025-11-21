@@ -1,4 +1,4 @@
-const { request } = require('../utils/index.js');
+const { get } = require('../utils/index.js');
 
 /**
  * 获取主题焦点列表
@@ -19,7 +19,14 @@ module.exports = async (params = {}, ctx) => {
   // f2 - 最新价
   // f4 - 涨跌幅
   // f3 - 涨跌额
-  let res = await request(url, params);
+  let header = {
+    Host: "push2.eastmoney.com",
+    Referer: "https://quote.eastmoney.com/center/qqzs.html",
+    "Sec-Fetch-Dest": "script",
+    "Sec-Fetch-Mode": "no-cors",
+    "Sec-Fetch-Site": "same-site"
+  }
+  let res = await get(url, params, header);
   return {
     code: 200,
     data: res.data || {}
