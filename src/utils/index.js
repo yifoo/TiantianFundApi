@@ -2,8 +2,11 @@ const axios = require('axios');
 const glob = require('glob');
 
 const headers = {
-  validmark:
-    'aKVEnBbJF9Nip2Wjf4de/fSvA8W3X3iB4L6vT0Y5cxvZbEfEm17udZKUD2qy37dLRY3bzzHLDv+up/Yn3OTo5Q==',
+  "Accept": '*/*',
+  "Sec-Fetch-Dest": "script",
+  "Sec-Fetch-Mode": "no-cors",
+  "Sec-Fetch-Site": "same-site",
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 };
 
 const deviceId = '874C427C-7C24-4980-A835-66FD40B67605';

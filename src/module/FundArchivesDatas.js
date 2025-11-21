@@ -6,7 +6,7 @@ const cheerio = require('cheerio');
  */
 module.exports = async (params = {}) => {
   const url = 'https://fundf10.eastmoney.com/FundArchivesDatas.aspx';
-  const resp = await get(url, params);
+  const resp = await request(url, params);
   const $ = cheerio.load(resp.split('"')[1])
   const data = [];
   $('table tbody tr').map(function () {
@@ -31,7 +31,7 @@ module.exports = async (params = {}) => {
   //* f12:股票code
   //* f14:股票名称
   const fundsPriceLimit = resp2.data.diff
-  console.log('fundsPriceLimit: ', fundsPriceLimit);
+  // console.log('fundsPriceLimit: ', fundsPriceLimit);
   const result = new Map();
   fundsPriceLimit.forEach(item => {
     result.set(item.f12, item);
