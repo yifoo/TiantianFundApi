@@ -1,4 +1,4 @@
-const { request } = require('../utils/index.js');
+const { request, get } = require('../utils/index.js');
 const cheerio = require('cheerio');
 
 /**
@@ -6,9 +6,8 @@ const cheerio = require('cheerio');
  */
 module.exports = async (params = {}) => {
   const url = 'https://fundf10.eastmoney.com/FundArchivesDatas.aspx';
-  const resp = await request(url, params);
+  const resp = await get(url, params);
   const $ = cheerio.load(resp.split('"')[1])
-  console.log('$ : ', $);
   const data = [];
   $('table tbody tr').map(function () {
     const $cells = $(this).find('td');
