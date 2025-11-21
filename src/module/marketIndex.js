@@ -24,7 +24,8 @@ module.exports = async (params = {}, ctx) => {
     Referer: "https://quote.eastmoney.com/center/qqzs.html",
     "Sec-Fetch-Dest": "script",
     "Sec-Fetch-Mode": "no-cors",
-    "Sec-Fetch-Site": "same-site"
+    "Sec-Fetch-Site": "same-site",
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
   }
   try {
     let res = await get(url, params, header);
