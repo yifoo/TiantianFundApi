@@ -25,20 +25,21 @@ function startServe() {
       });
     });
 
-    app.use(router.routes()).use(router.allowedMethods()).use(cors({
-      origin: (ctx) => {
-        // 动态匹配允许的域名
-        const allowedOrigins = [
-          'https://www.haohome.top',
-          'http://localhost:8000'
-        ];
-        const origin = ctx.request.header.origin;
-        return allowedOrigins.includes(origin) ? origin : false;
-      },
-      allowMethods: ['GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'],
-      // 下面这条加上才能共享跨域session，同时前端ajax请求也要加上响应的参数
-      credentials: true,
-    }));
+    app.use(router.routes()).use(router.allowedMethods()).use(cors());
+    // app.use(router.routes()).use(router.allowedMethods()).use(cors({
+    //   origin: (ctx) => {
+    //     // 动态匹配允许的域名
+    //     const allowedOrigins = [
+    //       'https://www.haohome.top',
+    //       'http://localhost:8000'
+    //     ];
+    //     const origin = ctx.request.header.origin;
+    //     return allowedOrigins.includes(origin) ? origin : false;
+    //   },
+    //   allowMethods: ['GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'],
+    //   // 下面这条加上才能共享跨域session，同时前端ajax请求也要加上响应的参数
+    //   credentials: true,
+    // }));
 
     const server = app.listen(3002, () => {
       log('🚀 server is running at port 3002');
