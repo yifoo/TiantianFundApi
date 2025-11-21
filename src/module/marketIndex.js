@@ -48,17 +48,8 @@ module.exports = async (params = {}, ctx) => {
     "sec-ch-ua": '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "macOS",
-    'x-real-ip': '123.138.73.98',
-    'x-forwarded-for': '123.138.73.98',
-    'remote-host': '123.138.73.98',
-    'x-host': 'funds.haohome.top:443',
-    'x-scheme': 'https',
-    connection: 'upgrade',
     'user-agent': 'Apifox/1.0.0 (https://apifox.com)',
     "Sec-Fetch-Site": "cross-site",
-    "Origin": null,
-    "User-Agent": "Mozilla/5.0 (iPad; CPU OS 17_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) onmac color=w eastmoney_ios appversion_10.34.1 pkg=com.eastmoney.ipad mainBagVersion=10.34.1 statusBarHeight=20.000000 titleBarHeight=44.000000 density=2.000000 fontsize=2 listFontSize=1 adaptAgedSwitch=0 dynamicIsland=0 tag=C49A7A0FFD187D64",
-    "Sec-Fetch-Dest": "empty"
   }
   try {
     console.log('params: ', params, ctx.request.header);
