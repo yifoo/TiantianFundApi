@@ -39,7 +39,7 @@ const request = async (url, params) => {
     }
   }
 };
-const get = async (url, params, header) => {
+const get = async (url, { params, header }) => {
   try {
     const res = await axios.get(url, {
       headers: header,

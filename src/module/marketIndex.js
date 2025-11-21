@@ -6,9 +6,8 @@ const { get } = require('../utils/index.js');
 module.exports = async (params = {}, ctx) => {
   const url = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
   // params.secids = params.secids;
-  ctx.request.header
   //* 需指数对应代码："1.000001,0.399001"
-  params.fields = ['f2,f3,f4,f6,f12,f13,f14,f104,f105,f106']
+  params.fields = 'f2,f3,f4,f6,f12,f13,f14,f104,f105,f106'
   params.dpt = 'sc.wxdcxcx'
   params.fltt = 2
   // f6- 交易规模
@@ -44,19 +43,18 @@ module.exports = async (params = {}, ctx) => {
     Referer: "https://quote.eastmoney.com/center/qqzs.html",
     "Sec-Fetch-Dest": "script",
     "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
     "sec-ch-ua": '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "macOS",
-    'user-agent': 'Apifox/1.0.0 (https://apifox.com)',
-    "Sec-Fetch-Site": "cross-site",
   }
   try {
-    console.log('params: ', params, ctx.request.header);
-    let res = await get(url, {}, header);
+    console.log('params: ', params);
+    let res = await get(url, { params, header });
     return {
       code: 200,
-      data: res || {}
+      data: res.data || {}
     }
   } catch (e) {
     console.log('e: ', e);
