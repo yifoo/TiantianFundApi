@@ -6,6 +6,7 @@ const { get } = require('../utils/index.js');
 module.exports = async (params = {}, ctx) => {
   const url = 'https://push2.eastmoney.com/api/qt/ulist.np/get';
   // params.secids = params.secids;
+  ctx.request.header
   //* 需指数对应代码："1.000001,0.399001"
   params.fields = ['f2,f3,f4,f6,f12,f13,f14,f104,f105,f106']
   params.dpt = 'sc.wxdcxcx'
@@ -50,8 +51,8 @@ module.exports = async (params = {}, ctx) => {
     "sec-ch-ua-platform": "macOS"
   }
   try {
-    console.log('params: ', params);
-    let res = await get(url, {}, header);
+    console.log('params: ', params, ctx.request.header);
+    let res = await get(url, {}, ctx.request.header);
     return {
       code: 200,
       data: res || {}
