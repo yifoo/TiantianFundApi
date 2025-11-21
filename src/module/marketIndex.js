@@ -36,7 +36,7 @@ module.exports = async (params = {}, ctx) => {
     "sec-ch-ua-platform": "macOS"
   }
   try {
-    let res = await get(url, params, header);
+    let res = await get("https://push2.eastmoney.com/api/qt/clist/get?np=1&fltt=1&invt=2&cb=jQuery3710006798016379217842_1763697120064&fs=i%3A100.SX5E%2Ci%3A100.FTSE%2Ci%3A100.MCX%2Ci%3A100.AXX%2Ci%3A100.FCHI%2Ci%3A100.GDAXI%2Ci%3A100.RTS%2Ci%3A100.IBEX%2Ci%3A100.PSI20%2Ci%3A100.OMXC20%2Ci%3A100.BFX%2Ci%3A100.AEX%2Ci%3A100.WIG%2Ci%3A100.OMXSPI%2Ci%3A100.SSMI%2Ci%3A100.HEX%2Ci%3A100.OSEBX%2Ci%3A100.ATX%2Ci%3A100.MIB%2Ci%3A100.ASE%2Ci%3A100.ICEXI%2Ci%3A100.PX%2Ci%3A100.ISEQ&fields=f12%2Cf13%2Cf14%2Cf292%2Cf1%2Cf2%2Cf4%2Cf3%2Cf152&fid=&pn=1&pz=100&po=1&ut=fa5fd1943c7b386f172d6893dbfba10b&dect=1&wbp2u=%7C0%7C0%7C0%7Cweb&_=1763697120065", {}, header);
     return {
       code: 200,
       data: res || {}

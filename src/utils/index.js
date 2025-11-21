@@ -44,7 +44,7 @@ const get = async (url, params, header) => {
     const res = await axios.get(url, {
       headers: header,
       params,
-      timeout: 10000
+      timeout: 30000
     });
     return res.data;
   } catch (e) {
