@@ -20,12 +20,17 @@ module.exports = async (params = {}, ctx) => {
   // f4 - 涨跌幅
   // f3 - 涨跌额
   let header = {
-    Host: "push2.eastmoney.com",
-    Referer: "https://quote.eastmoney.com/center/qqzs.html",
-    "Sec-Fetch-Dest": "script",
-    "Sec-Fetch-Mode": "no-cors",
-    "Sec-Fetch-Site": "same-site",
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    'Cache-Control': 'no-cache',
+    'Host': 'push2.eastmoney.com',
+    'Referer': 'https://quote.eastmoney.com/center/qqzs.html',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-site'
   }
   try {
     let res = await get(url, params, header);
