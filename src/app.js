@@ -63,6 +63,7 @@ function startServe() {
       } catch (err) {
         ctx.status = err.status || 500; // 设置状态码
         ctx.body = err.message; // 设置响应体内容
+        console.log('err.message: ', err.message);
         ctx.app.emit('error', err, ctx); // 触发错误事件，可以在 app.js 中监听此事件来记录日志等操作。
       }
     });
