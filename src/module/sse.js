@@ -4,7 +4,6 @@ const { sse } = require('../utils/index.js');
  * 获取股票详情
  */
 module.exports = async (params = {}, ctx) => {
-    console.log('params: ', ctx.request.path);
     ctx.request.socket.setTimeout(0);
     ctx.request.socket.setNoDelay(true);
     ctx.request.socket.setKeepAlive(true);
@@ -13,7 +12,7 @@ module.exports = async (params = {}, ctx) => {
     ctx.set('Cache-Control', 'no-cache');
     ctx.set('Connection', 'keep-alive');
 
-    let res = await sse('https://push2.eastmoney.com/api/qt/ulist/sse', {
+    let res = await sse('/api/qt/ulist/sse', {
         "fltt": "2",
         "secids": params.secids,
         "fields": params.fields,
