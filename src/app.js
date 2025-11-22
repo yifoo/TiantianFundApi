@@ -1,4 +1,6 @@
 const koa = require('koa');
+const http = require('http');
+const https = require('https');
 const Router = require('@koa/router');
 const { log } = require('./utils/log');
 const { getModules } = require('./utils');
@@ -30,7 +32,17 @@ function startServe() {
       target: 'https://push2.eastmoney.com', // 要代理的目标服务器地址
       changeOrigin: true,           // 是否改变源地址（通常需要设置为 true）
       pathRewrite: { '^/proxy': '' },  // 重写请求路径
-      timeout: 5000
+      timeout: 5000,
+      logs: true,
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br'
+      },
+      // ④ 使用自定义 http/https Agent，保持连接并设定超时
+      httpAgent: new http.Agent({ keepAlive: true, timeout: 15000 }),
+      httpsAgent: new https.Agent({ keepAlive: true, timeout: 15000 })
     });
     app.use(async (ctx, next) => {
       if (ctx.url.startsWith('/proxy')) {
