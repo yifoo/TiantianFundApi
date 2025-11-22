@@ -95,7 +95,7 @@ const getModules = () => {
   });
 };
 
-const sse = async (url, params) => {
+const sse = async (url, params, headers) => {
   const res = await axios(url, {
     headers,
     params: {

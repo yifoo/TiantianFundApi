@@ -39,19 +39,20 @@ function startServe() {
         'User-Agent':
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
         'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate, br'
+        'Accept-Encoding': 'gzip, deflate, br',
+        host: 'push2.eastmoney.com'
       },
       // ④ 使用自定义 http/https Agent，保持连接并设定超时
       httpAgent: new http.Agent({ keepAlive: true, timeout: 15000 }),
       httpsAgent: new https.Agent({ keepAlive: true, timeout: 15000 })
     });
-    app.use(async (ctx, next) => {
-      if (ctx.url.startsWith('/proxy')) {
-        ctx.respond = false;
-        await k2c(proxyMiddleware)(ctx, next);
-      }
-      await next();
-    });
+    // app.use(async (ctx, next) => {
+    //   if (ctx.url.startsWith('/proxy')) {
+    //     ctx.respond = false;
+    //     await k2c(proxyMiddleware)(ctx, next);
+    //   }
+    //   await next();
+    // });
     // 使用代理中间件
     app.use(router.routes()).use(router.allowedMethods()).use(cors());
     // app.use(router.routes()).use(router.allowedMethods()).use(cors({
@@ -91,21 +92,25 @@ function startServe() {
 
     // ⑥ 为了进一步降低 socket hang up，使用 axios 进行二次请求示例（可选）
     app.use(async (ctx, next) => {
+      console.log('ctx.path: ', ctx.path);
       if (ctx.path.startsWith('/proxy')) {
         try {
           const targetUrl = 'https://push2.eastmoney.com' + ctx.path.replace('/proxy', '')
+          console.log('ctx.headers: ', ctx.headers);
           const resp = await axios({
             method: ctx.method,
             url: targetUrl,
             params: ctx.query,
             data: ctx.request.body,
-            headers: ctx.headers,
+            headers: { ...ctx.headers, host: 'push2.eastmoney.com', referer: 'https://mpservice.com/b34ccfc4ed9a4af4a4880fee485cf417/release/pages/fundHold/index' },
             timeout: 12000,               // 与上面的 Agent 超时保持一致
-            responseType: 'arraybuffer'   // 保留 gzip/deflate 原始二进制
+            // responseType: 'arraybuffer'   // 保留 gzip/deflate 原始二进制
           })
-          ctx.set(resp.headers)          // 把目标返回的头部原样转发
+          ctx.set(ctx.headers)          // 把目标返回的头部原样转发
+          console.log('resp.data: ', resp.data);
           ctx.body = resp.data
         } catch (e) {
+          console.log('e: ', e);
           ctx.status = e.response?.status || 502
           ctx.body = { error: '代理失败', detail: e.message }
         }
