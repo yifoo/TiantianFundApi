@@ -20,6 +20,7 @@ module.exports = async (params = {}) => {
   }
   try {
     const resp = await get(url, { ...params, plat: 'Iphone', product: 'EFund', version: '6.8.2' }, header);
+    console.log('resp: ', resp);
     return {
       code: 200,
       data: resp.data
