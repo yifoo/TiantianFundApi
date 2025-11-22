@@ -12,7 +12,7 @@ module.exports = async (params = {}, ctx) => {
     ctx.set('Cache-Control', 'no-cache');
     ctx.set('Connection', 'keep-alive');
 
-    let res = await sse('/api/qt/ulist/sse', {
+    let res = await sse('https://push2.eastmoney.com/api/qt/ulist/sse', {
         "fltt": "2",
         "secids": params.secids,
         "fields": params.fields,
