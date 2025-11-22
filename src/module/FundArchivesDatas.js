@@ -16,7 +16,7 @@ module.exports = async (params = {}) => {
     return `${item.NEWTEXCH}.${item.GPDM}`
   })
   console.log('codeList: ', codeList.join(','));
-  const resp2 = await request(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f7,f8,f9,f11,f12,f13,f14`, { secids: codeList.join(',') });
+  const resp2 = await request(`https://push2.eastmoney.com/api/qt/ulist.np/get?appVersion=6.8.2&deviceid=94084AB3-7573-5EA7-BA65-C0DCED33643B&fields=f1%2Cf2%2Cf3%2Cf4%2Cf12%2Cf13%2Cf14%2Cf292&fltt=2&invt=2&plat=Iphone&product=EFund&secids=116.02268%2C116.06990%2C116.09926%2C116.02269%2C116.01530%2C1.603259%2C0.002821%2C1.688506%2C0.300759%2C0.002294&ut=94dd9fba6f4581ffc558a7b1a7c2b8a3&version=6.8.2`);
   //* f2:股价
   //* f3:涨幅
   //* f12:股票code
