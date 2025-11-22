@@ -29,7 +29,8 @@ function startServe() {
     const proxyMiddleware = createProxyMiddleware({
       target: 'https://push2.eastmoney.com', // 要代理的目标服务器地址
       changeOrigin: true,           // 是否改变源地址（通常需要设置为 true）
-      pathRewrite: { '^/proxy': '' }  // 重写请求路径
+      pathRewrite: { '^/proxy': '' },  // 重写请求路径
+      timeout: 5000
     });
     app.use(async (ctx, next) => {
       if (ctx.url.startsWith('/proxy')) {
