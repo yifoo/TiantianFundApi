@@ -50,7 +50,7 @@ module.exports = async (params = {}, ctx) => {
     "sec-ch-ua-platform": "macOS",
   }
   try {
-    console.log('params: ', params);
+    // console.log('params: ', params);
     let res = await get(url, params, header);
     return {
       code: 200,
