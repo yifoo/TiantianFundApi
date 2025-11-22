@@ -84,6 +84,7 @@ function startServe() {
     app.on('error', (err, ctx) => {
       // 常见的 socket hang up 多是超时或目标服务器主动关闭
       if (err.code === 'ECONNRESET' || err.message.includes('socket hang up')) {
+        console.log('err: ', err);
         console.warn('⚠️ 代理请求被目标服务器中断，已记录')
       } else {
         console.error('❌ Koa error:', err)
