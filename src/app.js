@@ -33,6 +33,7 @@ function startServe() {
     });
     app.use(async (ctx, next) => {
       if (ctx.url.startsWith('/proxy')) {
+        console.log('ctx.url: ', ctx.url);
         ctx.respond = false;
         await k2c(proxyMiddleware)(ctx, next);
       }
