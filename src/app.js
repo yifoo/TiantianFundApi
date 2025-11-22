@@ -6,6 +6,7 @@ const { log } = require('./utils/log');
 const { getModules } = require('./utils');
 const cors = require('koa2-cors');
 const k2c = require('koa2-connect');
+const axios = require('axios')
 const { createProxyMiddleware } = require("http-proxy-middleware");
 function startServe() {
   return new Promise((resolve) => {
@@ -68,16 +69,50 @@ function startServe() {
     //   credentials: true,
     // }));
 
-    app.use(async (ctx, next) => {
-      try {
-        await next(); // 执行下一个中间件（这里是代理）
-      } catch (err) {
-        ctx.status = err.status || 500; // 设置状态码
-        ctx.body = err.message; // 设置响应体内容
-        console.log('err.message: ', err.message);
-        ctx.app.emit('error', err, ctx); // 触发错误事件，可以在 app.js 中监听此事件来记录日志等操作。
+    // app.use(async (ctx, next) => {
+    //   try {
+    //     await next(); // 执行下一个中间件（这里是代理）
+    //   } catch (err) {
+    //     ctx.status = err.status || 500; // 设置状态码
+    //     ctx.body = err.message; // 设置响应体内容
+    //     console.log('err.message: ', err.message);
+    //     ctx.app.emit('error', err, ctx); // 触发错误事件，可以在 app.js 中监听此事件来记录日志等操作。
+    //   }
+    // });
+    // ⑤ 全局错误捕获
+    app.on('error', (err, ctx) => {
+      // 常见的 socket hang up 多是超时或目标服务器主动关闭
+      if (err.code === 'ECONNRESET' || err.message.includes('socket hang up')) {
+        console.warn('⚠️ 代理请求被目标服务器中断，已记录')
+      } else {
+        console.error('❌ Koa error:', err)
       }
-    });
+    })
+
+    // ⑥ 为了进一步降低 socket hang up，使用 axios 进行二次请求示例（可选）
+    app.use(async (ctx, next) => {
+      if (ctx.path.startsWith('/proxy')) {
+        try {
+          const targetUrl = EASTMONEY_HOST + ctx.path.replace('/proxy', '')
+          const resp = await axios({
+            method: ctx.method,
+            url: targetUrl,
+            params: ctx.query,
+            data: ctx.request.body,
+            headers: ctx.headers,
+            timeout: 12000,               // 与上面的 Agent 超时保持一致
+            responseType: 'arraybuffer'   // 保留 gzip/deflate 原始二进制
+          })
+          ctx.set(resp.headers)          // 把目标返回的头部原样转发
+          ctx.body = resp.data
+        } catch (e) {
+          ctx.status = e.response?.status || 502
+          ctx.body = { error: '代理失败', detail: e.message }
+        }
+      } else {
+        await next()
+      }
+    })
     const server = app.listen(3002, () => {
       log('🚀 server is running at port 3002');
       resolve(server);
