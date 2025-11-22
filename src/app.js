@@ -93,7 +93,7 @@ function startServe() {
     app.use(async (ctx, next) => {
       if (ctx.path.startsWith('/proxy')) {
         try {
-          const targetUrl = EASTMONEY_HOST + ctx.path.replace('/proxy', '')
+          const targetUrl = 'https://push2.eastmoney.com' + ctx.path.replace('/proxy', '')
           const resp = await axios({
             method: ctx.method,
             url: targetUrl,
