@@ -66,7 +66,8 @@ function startServe() {
         keepAlive: true,
         timeout: 20000,
         keepAliveMsecs: 1000,
-        rejectUnauthorized: true,
+        rejectUnauthorized: true,   // 生产请保持校验
+        family: 4,                  // ← 只走 IPv4
       });
 
       const baseHeaders = {
