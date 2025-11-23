@@ -96,6 +96,13 @@ const getModules = () => {
 };
 
 const sse = async (url, params, headers) => {
+  // 创建一个只使用IPv4的代理
+  const http = require('http');
+  const https = require('https');
+
+  // 创建强制使用IPv4的Agent
+  const httpAgent = new http.Agent({ family: 4 });
+  const httpsAgent = new https.Agent({ family: 4 });
   const res = await axios(url, {
     headers,
     params: {
@@ -103,6 +110,8 @@ const sse = async (url, params, headers) => {
       ...params,
     },
     responseType: 'stream',
+    httpAgent,
+    httpsAgent
   });
   return res.data;
 };
