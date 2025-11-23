@@ -19,7 +19,7 @@ module.exports = async (params = {}, ctx) => {
         "dpt": "jj.hqpush",
         "pn": "1",
         "pz": "100"
-    }, { ...ctx.headers, host: 'push2.eastmoney.com', referer: 'https://mpservice.com/b34ccfc4ed9a4af4a4880fee485cf417/release/pages/fundHold/index' });
+    }, { ...ctx.headers, host: 'push2.eastmoney.com', referer: 'https://mpservice.com/b34ccfc4ed9a4af4a4880fee485cf417/release/pages/fundHold/index', "User-Agent": "EMProjJijin/1085 CFNetwork/1498.700.2.1.1 Darwin/23.6.0" });
     return res
 };
 
