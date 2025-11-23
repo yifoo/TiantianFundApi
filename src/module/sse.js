@@ -13,9 +13,6 @@ module.exports = async (params = {}, ctx) => {
     ctx.request.socket.setTimeout(0);
     ctx.request.socket.setNoDelay(true);
     ctx.request.socket.setKeepAlive(true);
-    ctx.request.socket.setTimeout(0);
-    ctx.request.socket.setNoDelay(true);
-    ctx.request.socket.setKeepAlive(true);
 
     ctx.set('Content-Type', 'text/event-stream; charset=utf-8');
     ctx.set('Cache-Control', 'no-cache');
