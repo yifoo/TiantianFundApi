@@ -4,6 +4,15 @@ const { sse } = require('../utils/index.js');
  * 获取股票详情
  */
 module.exports = async (params = {}, ctx) => {
+    // 设置CORS头
+    ctx.set('Access-Control-Allow-Origin', 'https://www.haohome.top');
+    ctx.set('Access-Control-Allow-Credentials', 'true');
+    ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+    ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
+    ctx.request.socket.setTimeout(0);
+    ctx.request.socket.setNoDelay(true);
+    ctx.request.socket.setKeepAlive(true);
     ctx.request.socket.setTimeout(0);
     ctx.request.socket.setNoDelay(true);
     ctx.request.socket.setKeepAlive(true);

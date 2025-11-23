@@ -5,23 +5,6 @@ const { log } = require('./utils/log');
 const { getModules } = require('./utils');
 const cors = require('koa2-cors');
 
-// ---------- 1️⃣ 统一获取 EventSource ----------
-let EventSource;
-(async () => {
-  try {
-    const mod = await import('eventsource');
-    EventSource =
-      mod.EventSource || mod.default || (mod.default && mod.default.EventSource);
-  } catch (_) {
-    const mod = require('eventsource');
-    EventSource =
-      mod.EventSource || mod.default || (mod.default && mod.default.EventSource);
-  }
-  if (typeof EventSource !== 'function') {
-    console.error('❌ EventSource 导入失败');
-    process.exit(1);
-  }
-})();
 
 function startServe() {
   return new Promise((resolve) => {
