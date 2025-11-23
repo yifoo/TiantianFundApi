@@ -41,13 +41,14 @@ function startServe() {
     );
 
     // ---------- 3️⃣ **先注册 SSE 路由** ----------
+    // ---------- /sse 路由（方案 A） ----------
     router.get('/sse', async (ctx) => {
       // 等待 EventSource 类加载完成
+      ctx.status = 200;
       while (typeof EventSource !== 'function') {
         await new Promise((r) => setTimeout(r, 30));
       }
 
-      // 关闭 Koa 自动响应，让我们手动写入 SSE
       ctx.respond = false;
       ctx.set({
         'Content-Type': 'text/event-stream',
@@ -55,26 +56,19 @@ function startServe() {
         Connection: 'keep-alive',
         'X-Accel-Buffering': 'no',
       });
-      let query = ctx.query
-      // 目标 SSE 地址（可改为 query 参数）
-      const targetUrl =
-        `https://push2.eastmoney.com/api/qt/ulist/sse?secids=${query.secids}&fields=${query.fields}&pn=1&ut=94dd9fba6f4581ffc558a7b1a7c2b8a3&pz=30&dpt=jj.hqpush&fltt=2`;
+      ctx.res.flushHeaders(); // 立即发送头部
 
-      // HTTPS keep‑alive Agent
+      // 这里使用东财官方的 SSE 地址（返回 text/event-stream）
+      // 你可以在浏览器 Network 中抓取实际的 URL，确保 Content‑Type 为 text/event-stream
+      const targetUrl = `https://push2.eastmoney.com/api/qt/ulist/sse?secids=${ctx.query.secids}&fields=${ctx.query.fields}&pn=1&ut=94dd9fba6f4581ffc558a7b1a7c2b8a3&pz=30&dpt=jj.hqpush&fltt=2`;
+
       const httpsAgent = new https.Agent({
         keepAlive: true,
         timeout: 20000,
         keepAliveMsecs: 1000,
         rejectUnauthorized: true,
       });
-      const httpAgent = new http.Agent({
-        keepAlive: true,
-        timeout: 20000,
-        keepAliveMsecs: 1000,
-        rejectUnauthorized: true,
-      });
 
-      // 伪装 Header
       const baseHeaders = {
         'User-Agent':
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0.0.0 Safari/537.36',
@@ -84,36 +78,27 @@ function startServe() {
         Referer: 'https://quote.eastmoney.com/',
       };
 
-      // 创建内部 EventSource（真正向目标站点拉流）
       const es = new EventSource(targetUrl, {
         https: { agent: httpsAgent },
-        http: { agent: httpAgent },
         headers: baseHeaders,
       });
 
-      // 心跳防超时（每 15 秒发送一次注释行）
-      const heartbeat = setInterval(() => {
-        ctx.res.write(':heartbeat\n\n');
-      }, 15000);
+      const heartbeat = setInterval(() => ctx.res.write(':heartbeat\n\n'), 15000);
+      ctx.res.write(':connected\n\n');
 
-      es.onopen = () => {
-        console.log('✅ SSE 代理已连上目标站点');
-        ctx.res.write(':connected\n\n');
-      };
+      es.onopen = () => console.log('✅ SSE 代理已连上真实 SSE');
 
       es.onerror = (err) => {
-        console.error('❌ SSE 代理错误', err);
+        console.error('❌ 上游 SSE 错误', err);
+        // 发送错误事件，保持连接 2 秒后再关闭，防止浏览器直接报 404
         ctx.res.write(
           `event:error\ndata:${JSON.stringify({ msg: 'upstream error' })}\n\n`
         );
-        cleanup();
+        setTimeout(cleanup, 2000);
       };
 
-      es.onmessage = (ev) => {
-        ctx.res.write(`data:${ev.data}\n\n`);
-      };
+      es.onmessage = (ev) => ctx.res.write(`data:${ev.data}\n\n`);
 
-      // 客户端关闭时清理
       ctx.req.on('close', () => {
         console.log('🔌 客户端关闭 SSE 连接');
         cleanup();
@@ -125,6 +110,7 @@ function startServe() {
         if (!ctx.res.writableEnded) ctx.res.end();
       }
     });
+
 
     log('✅ 已注册 SSE 代理路由 /sse');
 
