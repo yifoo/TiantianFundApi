@@ -22,7 +22,7 @@ module.exports = async (params = {}, ctx) => {
         "dpt": "jj.hqpush",
         "pn": "1",
         "pz": "100"
-    }, { ...ctx.headers, host: 'push2.eastmoney.com', referer: 'https://mpservice.com/b34ccfc4ed9a4af4a4880fee485cf417/release/pages/fundHold/index', "User-Agent": "EMProjJijin/1085 CFNetwork/1498.700.2.1.1 Darwin/23.6.0" });
+    }, { ...ctx.headers, host: 'push2.eastmoney.com', referer: 'https://mpservice.com/b34ccfc4ed9a4af4a4880fee485cf417/release/pages/fundHold/index', "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' });
     return res
 };
 
