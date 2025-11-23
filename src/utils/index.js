@@ -103,18 +103,22 @@ const sse = async (url, params, headers) => {
   // 创建强制使用IPv4的Agent
   const httpAgent = new http.Agent({ family: 4 });
   const httpsAgent = new https.Agent({ family: 4 });
-  const res = await axios(url, {
-    headers,
-    params: {
-      ...baseData,
-      ...params,
-    },
-    responseType: 'stream',
-    httpAgent,
-    httpsAgent
-  });
-  console.log('res: ', res);
-  return res.data;
+  try {
+    const res = await axios(url, {
+      headers,
+      params: {
+        ...baseData,
+        ...params,
+      },
+      responseType: 'stream',
+      httpAgent,
+      httpsAgent
+    });
+    return res.data;
+  } catch (err) {
+    console.log('err: ', err);
+    return err
+  }
 };
 
 module.exports = {
