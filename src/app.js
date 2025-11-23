@@ -1,131 +1,155 @@
-const koa = require('koa');
+// app.js
+const Koa = require('koa');
 const http = require('http');
 const https = require('https');
 const Router = require('@koa/router');
 const { log } = require('./utils/log');
 const { getModules } = require('./utils');
 const cors = require('koa2-cors');
-const k2c = require('koa2-connect');
-const axios = require('axios')
-const { createProxyMiddleware } = require("http-proxy-middleware");
+
+// ---------- 1️⃣ 统一获取 EventSource ----------
+let EventSource;
+(async () => {
+  try {
+    const mod = await import('eventsource');
+    EventSource =
+      mod.EventSource || mod.default || (mod.default && mod.default.EventSource);
+  } catch (_) {
+    const mod = require('eventsource');
+    EventSource =
+      mod.EventSource || mod.default || (mod.default && mod.default.EventSource);
+  }
+  if (typeof EventSource !== 'function') {
+    console.error('❌ EventSource 导入失败');
+    process.exit(1);
+  }
+})();
+
 function startServe() {
   return new Promise((resolve) => {
-    const app = new koa();
-
+    const app = new Koa();
     const router = new Router();
 
-    getModules().forEach(({ fileName, path }) => {
+    // ---------- 2️⃣ CORS（必须最前） ----------
+    app.use(
+      cors({
+        origin: '*', // 如需限制请改成前端域名
+        allowMethods: ['GET', 'POST', 'OPTIONS'],
+        allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+        credentials: false,
+      })
+    );
+
+    // ---------- 3️⃣ **先注册 SSE 路由** ----------
+    router.get('/sse', async (ctx) => {
+      // 等待 EventSource 类加载完成
+      while (typeof EventSource !== 'function') {
+        await new Promise((r) => setTimeout(r, 30));
+      }
+
+      // 关闭 Koa 自动响应，让我们手动写入 SSE
+      ctx.respond = false;
+      ctx.set({
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+        'X-Accel-Buffering': 'no',
+      });
+      let query = ctx.query
+      // 目标 SSE 地址（可改为 query 参数）
+      const targetUrl =
+        `https://push2.eastmoney.com/api/qt/ulist/sse?secids=${query.secids}&fields=${query.fields}&pn=1&ut=94dd9fba6f4581ffc558a7b1a7c2b8a3&pz=30&dpt=jj.hqpush&fltt=2`;
+
+      // HTTPS keep‑alive Agent
+      const httpsAgent = new https.Agent({
+        keepAlive: true,
+        timeout: 20000,
+        keepAliveMsecs: 1000,
+        rejectUnauthorized: true,
+      });
+      const httpAgent = new http.Agent({
+        keepAlive: true,
+        timeout: 20000,
+        keepAliveMsecs: 1000,
+        rejectUnauthorized: true,
+      });
+
+      // 伪装 Header
+      const baseHeaders = {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0.0.0 Safari/537.36',
+        Accept: '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        Connection: 'keep-alive',
+        Referer: 'https://quote.eastmoney.com/',
+      };
+
+      // 创建内部 EventSource（真正向目标站点拉流）
+      const es = new EventSource(targetUrl, {
+        https: { agent: httpsAgent },
+        http: { agent: httpAgent },
+        headers: baseHeaders,
+      });
+
+      // 心跳防超时（每 15 秒发送一次注释行）
+      const heartbeat = setInterval(() => {
+        ctx.res.write(':heartbeat\n\n');
+      }, 15000);
+
+      es.onopen = () => {
+        console.log('✅ SSE 代理已连上目标站点');
+        ctx.res.write(':connected\n\n');
+      };
+
+      es.onerror = (err) => {
+        console.error('❌ SSE 代理错误', err);
+        ctx.res.write(
+          `event:error\ndata:${JSON.stringify({ msg: 'upstream error' })}\n\n`
+        );
+        cleanup();
+      };
+
+      es.onmessage = (ev) => {
+        ctx.res.write(`data:${ev.data}\n\n`);
+      };
+
+      // 客户端关闭时清理
+      ctx.req.on('close', () => {
+        console.log('🔌 客户端关闭 SSE 连接');
+        cleanup();
+      });
+
+      function cleanup() {
+        clearInterval(heartbeat);
+        es.close();
+        if (!ctx.res.writableEnded) ctx.res.end();
+      }
+    });
+
+    log('✅ 已注册 SSE 代理路由 /sse');
+
+    // ---------- 4️⃣ 动态业务路由 ----------
+    const modules = getModules();
+    modules.forEach(({ fileName, path }) => {
       const routerPath = `/${fileName}`;
       const api = require(path);
       app[fileName] = api;
-      // app['proxy/' + fileName] = api;
-
-      log(`✅ 生成路由 ${routerPath}`);
-      router.get(routerPath, async (ctx, next) => {
+      log(`✅ 生成业务路由 ${routerPath}`);
+      router.get(routerPath, async (ctx) => {
         ctx.status = 200;
         ctx.body = await api(ctx.request.query, ctx);
-        next();
       });
     });
 
-    // 创建一个代理中间件
-    const proxyMiddleware = createProxyMiddleware({
-      target: 'https://push2.eastmoney.com', // 要代理的目标服务器地址
-      changeOrigin: true,           // 是否改变源地址（通常需要设置为 true）
-      pathRewrite: { '^/proxy': '' },  // 重写请求路径
-      timeout: 5000,
-      logs: true,
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate, br',
-        host: 'push2.eastmoney.com'
-      },
-      // ④ 使用自定义 http/https Agent，保持连接并设定超时
-      httpAgent: new http.Agent({ keepAlive: true, timeout: 15000 }),
-      httpsAgent: new https.Agent({ keepAlive: true, timeout: 15000 })
-    });
-    // app.use(async (ctx, next) => {
-    //   if (ctx.url.startsWith('/proxy')) {
-    //     ctx.respond = false;
-    //     await k2c(proxyMiddleware)(ctx, next);
-    //   }
-    //   await next();
-    // });
-    // 使用代理中间件
-    app.use(router.routes()).use(router.allowedMethods()).use(cors());
-    // app.use(router.routes()).use(router.allowedMethods()).use(cors({
-    //   origin: (ctx) => {
-    //     // 动态匹配允许的域名
-    //     const allowedOrigins = [
-    //       'https://www.haohome.top',
-    //       'http://localhost:8000'
-    //     ];
-    //     const origin = ctx.request.header.origin;
-    //     return allowedOrigins.includes(origin) ? origin : false;
-    //   },
-    //   allowMethods: ['GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'],
-    //   // 下面这条加上才能共享跨域session，同时前端ajax请求也要加上响应的参数
-    //   credentials: true,
-    // }));
+    // ---------- 5️⃣ 挂载路由 ----------
+    app.use(router.routes()).use(router.allowedMethods());
 
-    // app.use(async (ctx, next) => {
-    //   try {
-    //     await next(); // 执行下一个中间件（这里是代理）
-    //   } catch (err) {
-    //     ctx.status = err.status || 500; // 设置状态码
-    //     ctx.body = err.message; // 设置响应体内容
-    //     console.log('err.message: ', err.message);
-    //     ctx.app.emit('error', err, ctx); // 触发错误事件，可以在 app.js 中监听此事件来记录日志等操作。
-    //   }
-    // });
-    // ⑤ 全局错误捕获
-    app.on('error', (err, ctx) => {
-      // 常见的 socket hang up 多是超时或目标服务器主动关闭
-      if (err.code === 'ECONNRESET' || err.message.includes('socket hang up')) {
-        console.log('err: ', err);
-        console.warn('⚠️ 代理请求被目标服务器中断，已记录')
-      } else {
-        console.error('❌ Koa error:', err)
-      }
-    })
-
-    // ⑥ 为了进一步降低 socket hang up，使用 axios 进行二次请求示例（可选）
-    app.use(async (ctx, next) => {
-      console.log('ctx.path: ', ctx.path);
-      if (ctx.path.startsWith('/proxy')) {
-        try {
-          const targetUrl = 'https://push2.eastmoney.com' + ctx.path.replace('/proxy', '')
-          console.log('ctx.headers: ', ctx.headers);
-          const resp = await axios({
-            method: ctx.method,
-            url: targetUrl,
-            params: ctx.query,
-            data: ctx.request.body,
-            headers: { ...ctx.headers, host: 'push2.eastmoney.com', referer: 'https://mpservice.com/b34ccfc4ed9a4af4a4880fee485cf417/release/pages/fundHold/index' },
-            timeout: 12000,               // 与上面的 Agent 超时保持一致
-            // responseType: 'arraybuffer'   // 保留 gzip/deflate 原始二进制
-          })
-          ctx.set(ctx.headers)          // 把目标返回的头部原样转发
-          console.log('resp.data: ', resp.data);
-          ctx.body = resp.data
-        } catch (e) {
-          console.log('e: ', e);
-          ctx.status = e.response?.status || 502
-          ctx.body = { error: '代理失败', detail: e.message }
-        }
-      } else {
-        await next()
-      }
-    })
+    // ---------- 6️⃣ 启动服务器 ----------
     const server = app.listen(3002, () => {
-      log('🚀 server is running at port 3002');
+      log('🚀 server is running at http://localhost:3002');
       resolve(server);
     });
   });
 }
 
-module.exports = {
-  startServe,
-};
+module.exports = { startServe };
