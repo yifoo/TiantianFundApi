@@ -113,6 +113,7 @@ const sse = async (url, params, headers) => {
     httpAgent,
     httpsAgent
   });
+  console.log('res: ', res);
   return res.data;
 };
 
