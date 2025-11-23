@@ -20,17 +20,6 @@ function startServe() {
         credentials: false,
       })
     );
-    app.use(async (ctx, next) => {
-      if (ctx.method === 'OPTIONS') {
-        ctx.status = 200;
-        return;
-      }
-      await next();
-    });
-    app.use(async (ctx, next) => {
-      await next();
-      console.log('Response headers:', ctx.response.headers);
-    });
     // ---------- 4️⃣ 动态业务路由 ----------
     const modules = getModules();
     modules.forEach(({ fileName, path }) => {

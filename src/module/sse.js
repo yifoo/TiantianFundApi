@@ -8,7 +8,9 @@ module.exports = async (params = {}, ctx) => {
     ctx.request.socket.setTimeout(0);
     ctx.request.socket.setNoDelay(true);
     ctx.request.socket.setKeepAlive(true);
-
+    ctx.set('Access-Control-Allow-Origin', '*');
+    ctx.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
     ctx.set('Content-Type', 'text/event-stream; charset=utf-8');
     ctx.set('Cache-Control', 'no-cache');
     ctx.set('Connection', 'keep-alive');
