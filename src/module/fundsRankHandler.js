@@ -9,6 +9,7 @@ module.exports = async (params = {}, ctx) => {
   let sort = JSON.parse(params.sort)
   let sortKey = Object.keys(sort).length > 0 ? Object.keys(sort)[0] : ''
   let sortItem = Object.keys(sort).length > 0 ? sort[sortKey].slice(0, -3) : 'desc';
+  console.log('sortItem: ', sortKey, sortItem);
   let sc = 'rzdf'
   switch (sortKey) {
     case "dayRatio": sc = 'rzdf'; break;
@@ -27,13 +28,14 @@ module.exports = async (params = {}, ctx) => {
     op: 'ph',
     dt: 'kf',
     ft: 'all',
+    gs: 0,
     // sc: 'zzf',//rzdf,zzf,1yzf,3yzf,6yzf,1nzf,2nzf,3nzf,jnzf,lnzf
     sc,
     st: sortItem,
     sd: dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
     ed: dayjs().format("YYYY-MM-DD"),
-    pi: params.current,
-    pn: params.pageSize,
+    pi: parseInt(params.current),
+    pn: parseInt(params.pageSize),
     dx: 1
     // ...params,
   }
@@ -50,21 +52,20 @@ module.exports = async (params = {}, ctx) => {
         code: arr[0],
         short_name: arr[1],
         date: arr[3],
-        net: arr[4],
-        JJJZ: arr[5],
-        LJJZ: arr[6],
-        dayRatio: arr[7],
-        oneWeek: arr[8],
-        oneMonth: arr[9],
-        threeMonth: arr[10],
-        sixMonth: arr[11],
-        oneYear: arr[12],
-        twoYear: arr[13],
-        threeYear: arr[14],
-        thisYear: arr[15],
-        created: arr[16],
-        createdDate: arr[17],
-        serviceFee: arr[21],
+        JJJZ: arr[4],
+        LJJZ: arr[5],
+        dayRatio: arr[6],
+        oneWeek: arr[7],
+        oneMonth: arr[8],
+        threeMonth: arr[9],
+        sixMonth: arr[10],
+        oneYear: arr[11],
+        twoYear: arr[12],
+        threeYear: arr[13],
+        thisYear: arr[14],
+        created: arr[15],
+        createdDate: arr[16],
+        serviceFee: arr[20],
       }
     })
     rankData.datas = data
