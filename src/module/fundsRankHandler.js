@@ -1,4 +1,5 @@
 const { get } = require('../utils/index.js');
+const dayjs = require('dayjs')
 
 /**
  * 获取主题焦点列表
@@ -29,10 +30,11 @@ module.exports = async (params = {}, ctx) => {
     // sc: 'zzf',//rzdf,zzf,1yzf,3yzf,6yzf,1nzf,2nzf,3nzf,jnzf,lnzf
     sc,
     st: sortItem,
-    sd: '2024-11-20',
-    ed: '2025-11-20',
+    sd: dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
+    ed: dayjs().format("YYYY-MM-DD"),
     pi: params.current,
     pn: params.pageSize,
+    dx: 1
     // ...params,
   }
   let res = await get(url, params, { Host: 'fund.eastmoney.com', Referer: 'https://fund.eastmoney.com/data/fundranking.html' });
