@@ -37,7 +37,7 @@ module.exports = async (params = {}, ctx) => {
     dx: 1
     // ...params,
   }
-  let res = await get(url, params, { Host: 'fund.eastmoney.com', Referer: 'https://fund.eastmoney.com/data/fundranking.html' });
+  let res = await get(url, params, { Host: 'fund.eastmoney.com', Referer: 'https://fund.eastmoney.com/data/fundranking.html', "sec-fetch-dest": "script", "sec-fetch-mode": "no-cors", "sec-fetch-site": "same-origin" });
   try {
     // 提取JSON对象部分
     var rankData = {}
