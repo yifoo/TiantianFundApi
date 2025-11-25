@@ -9,7 +9,6 @@ module.exports = async (params = {}, ctx) => {
   let sort = JSON.parse(params.sort)
   let sortKey = Object.keys(sort).length > 0 ? Object.keys(sort)[0] : ''
   let sortItem = Object.keys(sort).length > 0 ? sort[sortKey].slice(0, -3) : 'desc';
-  console.log('sortItem: ', sortKey, sortItem);
   let sc = 'rzdf'
   switch (sortKey) {
     case "dayRatio": sc = 'rzdf'; break;
@@ -28,7 +27,7 @@ module.exports = async (params = {}, ctx) => {
     op: 'ph',
     dt: 'kf',
     ft: 'all',
-    gs: 0,
+    gs: params.gs,
     // sc: 'zzf',//rzdf,zzf,1yzf,3yzf,6yzf,1nzf,2nzf,3nzf,jnzf,lnzf
     sc,
     st: sortItem,
