@@ -1,9 +1,13 @@
+/*
+ * @Author: wuhao 
+ * @Date: 2025-11-26 07:29:38 
+ * @Desc: 获取基金排名列表
+ * @Last Modified by: wuhao
+ * @Last Modified time: 2025-11-26 07:30:06
+ */
 const { get } = require('../utils/index.js');
 const dayjs = require('dayjs')
 
-/**
- * 获取主题焦点列表
- */
 module.exports = async (params = {}, ctx) => {
   const url = 'https://fund.eastmoney.com/data/rankhandler.aspx';
   let sort = JSON.parse(params.sort)

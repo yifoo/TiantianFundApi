@@ -1,8 +1,12 @@
+/*
+ * @Author: wuhao 
+ * @Date: 2025-11-26 07:33:04 
+ * @Desc: 获取实时基金指数流数据
+ * @Last Modified by: wuhao
+ * @Last Modified time: 2025-11-26 07:33:28
+ */
 const { sse } = require('../utils/index.js');
 
-/**
- * 获取股票详情
- */
 module.exports = async (params = {}, ctx) => {
 
     ctx.request.socket.setTimeout(0);

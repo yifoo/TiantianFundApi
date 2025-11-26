@@ -1,8 +1,12 @@
+/*
+ * @Author: wuhao 
+ * @Date: 2025-11-26 07:32:47 
+ * @Desc: 基金搜索
+ * @Last Modified by:   wuhao 
+ * @Last Modified time: 2025-11-26 07:32:47 
+ */
 const { request } = require('../utils/index.js');
 
-/**
- * 以基金名称搜索
- */
 module.exports = async () => {
   const url = `https://fund.eastmoney.com/js/jjjz_gs.js?v=${new Date().getTime()}`;
   let resp = await request(url);
