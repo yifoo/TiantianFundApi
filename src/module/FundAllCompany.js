@@ -1,24 +1,22 @@
 /*
  * @Author: wuhao 
  * @Date: 2025-11-26 07:32:47 
- * @Desc: 获取基金公司列表
+ * @Desc: 获取全部基金公司列表
  * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-28 21:43:23
+ * @Last Modified time: 2025-11-29 09:30:38
  */
 const { request } = require('../utils/index.js');
 
 module.exports = async (params = {}) => {
-  const url = `https://fundmobapi.eastmoney.com/FundMApi/FundCompanyBaseList.ashx`;
+  const url = `https://fundcomapi.tiantianfunds.com/mm/FundCompany/FundAllCompany`;
   let resp = await request(url);
   try {
-    let corpList = resp.Datas.map((item, index) => {
+    let corpList = resp.data.map((item, index) => {
       return {
         label: item.SNAME,
         value: item.COMPANYCODE,
         ABBNAME: item.ABBNAME,
-        count: item.FUNDCOUNT,
-        JJRS: item.JJRS,
-        estabdate: item.ESTABDATE
+        FNAME: item.FNAME,
       }
     })
     return {
