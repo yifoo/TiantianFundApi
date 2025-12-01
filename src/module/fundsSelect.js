@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 22:28:41 
  * @Desc: 根据条件筛选基金
  * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-29 14:43:07
+ * @Last Modified time: 2025-12-01 10:59:47
  */
 const { post } = require('../utils/index.js');
 const dayjs = require('dayjs')
@@ -14,6 +14,7 @@ module.exports = async (params = {}, ctx) => {
   let sortItem = Object.keys(sort).length > 0 ? (sort[sortKey] === 'ascend' ? '1' : '-1') : '';
   let sc = '5_1_';
   switch (sortKey) {
+    case "gsZzl": sc = '20_'; break;
     case "daySyl": sc = '5_1_'; break;
     case "weekSyl": sc = '5_2_'; break;
     case "monthSyl": sc = '5_3_'; break;
