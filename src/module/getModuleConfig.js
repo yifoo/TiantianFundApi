@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:47 
  * @Desc: 获取天天基金基金模块
  * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-29 09:43:19
+ * @Last Modified time: 2025-12-07 10:25:28
  */
 const { request } = require('../utils/index.js');
 
@@ -33,7 +33,6 @@ module.exports = async (params = {}) => {
   }
   try {
     let resp = await request(url, params, header);
-    console.log('resp: ', resp);
     return {
       code: 200,
       data: resp.datas.Modules

@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:47 
  * @Desc: 获取基金指数列表
  * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-28 22:03:38
+ * @Last Modified time: 2025-12-07 10:25:25
  */
 const { request } = require('../utils/index.js');
 
@@ -11,7 +11,6 @@ module.exports = async (params = {}) => {
   const url = `https://fundcomapi.tiantianfunds.com/mm/FundSubject/FundBaseInfos`;
   try {
     let resp = await request(url, { FIELDS: 'INDEXCODE,INDEXNAME,INDEXQP' });
-    console.log('resp: ', resp);
     return {
       code: 200,
       data: resp.data,
