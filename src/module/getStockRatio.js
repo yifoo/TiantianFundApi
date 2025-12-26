@@ -10,28 +10,33 @@ module.exports = async (params = {}) => {
 
   let fundStocks = resp.data.fundStocks
   // console.log('fundStocks: ', fundStocks);
-  return {
-    code: 200,
-    data: fundStocks,
-  }
-  // let codeList = []
-  // codeList = fundStocks.map(item => {
-  //   return `${item.NEWTEXCH}.${item.GPDM}`
-  // })
-  // console.log('codeList: ', codeList.join(','));
-  // const resp2 = await request(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f7,f8,f9,f11,f12,f13,f14`, { secids: codeList.join(',') });
+  // return {
+  //   code: 200,
+  //   data: fundStocks,
+  // }
+  let codeList = []
+  codeList = fundStocks.map(item => {
+    return `${item.NEWTEXCH}.${item.GPDM}`
+  })
+  const resp2 = await get(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f7,f8,f9,f11,f12,f13,f14`, { secids: codeList.join(',') });
   // //* f2:股价
   // //* f3:涨幅
   // //* f12:股票code
   // //* f14:股票名称
-  // console.log('resp2.data: ', resp2.data);
-  // const fundsPriceLimit = resp2.data.diff
-  // // console.log('fundsPriceLimit: ', fundsPriceLimit);
-  // const result = new Map();
-  // fundsPriceLimit.forEach(item => {
-  //   result.set(item.f12, item);
-  // });
-  // // codeList = codeList.split(",")
+  const fundsPriceLimit = resp2.data.diff
+  const result = new Map();
+  fundsPriceLimit.forEach(item => {
+    result.set(item.f12, item);
+  });
+  fundStocks.map((item) => {
+    fundsPriceLimit.map(_item => {
+      if (item.GPDM === _item.f12) {
+        item.price = _item.f2
+        item.ratio = _item.f3
+      }
+    })
+  })
+  // codeList = codeList.split(",")
   // let stockTypeList = new Map();
   // for (let i of codeList) {
   //   if (i) {
@@ -55,9 +60,9 @@ module.exports = async (params = {}) => {
   //   sumRadio += parseFloat(item.ratio || 0)
   // });
 
-  // return {
-  //   code: 200,
-  //   data: resp2.data,
-  //   sumRadio: sumRadio.toFixed(2)
-  // }
+  return {
+    code: 200,
+    data: fundStocks,
+    // sumRadio: sumRadio.toFixed(2)
+  }
 };
