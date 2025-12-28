@@ -40,7 +40,7 @@ module.exports = async (params = {}) => {
   } catch (e) {
     return {
       code: 500,
-      data: "未查询到股票持仓信息!",
+      msg: "未查询到股票持仓信息!",
     }
   }
 };
