@@ -735,6 +735,16 @@
   }
 }
 ```
+### 获取基金类型
+
+**路由**：`/conditionListForRank`
+
+参数：
+
+**结果**：
+
+
+
 ### 获取基金更多详情信息
 
 **路由**
@@ -972,7 +982,104 @@
 }
 ```
 
-### 获取基金净值估算（实时）
+### 实时批量获取基金估值
+
+批量从天天基金接口获取基金净值估算
+
+**路由**：`/FundsNewNet`
+
+参数：
+
+`CODES` 基金code参数拼接合集
+
+`pageIndex`: 页码 1开始
+
+`pagesize`: 每页条数
+
+`plat`:平台，默认为`Iphone`
+
+**结果**：
+
+```js
+[
+  {
+    NAV: 1.848,
+    NAVCHGRT: -2.5,
+    CHANGERATIO: null,
+    SYRQ: '2026-02-04',
+    MAXSG: 100000000000,
+    GZTIME: '',
+    NEWPRICE: null,
+    HQDATE: null,
+    FCODE: '014192',
+    SYL_JN: 12.74,
+    SYL_3Y: 32.21,
+    ISBUY: '1',
+    SYL_LN: 84.8,
+    SYL_3N: 76.77,
+    SYL_1N: 98.8,
+    ZJL: null,
+    SYL_5N: null,
+    NEWINDEXTEXCH: null,
+    INDEXCODE: null,
+    NAVCHGRT100: -2.5,
+    SHORTNAME: '广发先进制造股票发起式C',
+    TRKERROR1: null,
+    ISREDBAGS: null,
+    GSZ: '',
+    GSZZL: '',
+    SYL_6Y: 88.63,
+    RSBTYPE: '001001',
+    ISHUOQI: null,
+    ACCNAV: 1.848,
+    PDATE: '2026-02-04',
+    SYL_2N: 226.85,
+    RSFUNDTYPE: '001',
+    SYL_Z: -2.03,
+    SYL_Y: 12.74
+  },
+  {
+    NAV: 2.1776,
+    NAVCHGRT: -0.39,
+    CHANGERATIO: null,
+    SYRQ: '2026-02-04',
+    MAXSG: 100000000000,
+    GZTIME: '2026-02-04 15:00',
+    NEWPRICE: null,
+    HQDATE: null,
+    FCODE: '020357',
+    SYL_JN: 14.54,
+    SYL_3Y: 22.02,
+    ISBUY: '1',
+    SYL_LN: 117.76,
+    SYL_3N: null,
+    SYL_1N: 74.4,
+    ZJL: null,
+    SYL_5N: null,
+    NEWINDEXTEXCH: '2',
+    INDEXCODE: '931743',
+    NAVCHGRT100: -0.39,
+    SHORTNAME: '华夏半导体材料设备ETF联接C',
+    TRKERROR1: 2.4688,
+    ISREDBAGS: null,
+    GSZ: 2.1774,
+    GSZZL: -0.4,
+    SYL_6Y: 58.72,
+    RSBTYPE: '000001',
+    ISHUOQI: null,
+    ACCNAV: 2.1776,
+    PDATE: '2026-02-04',
+    SYL_2N: 141.87,
+    RSFUNDTYPE: '000',
+    SYL_Z: -6.56,
+    SYL_Y: 14.54
+  }
+]
+```
+
+
+
+### 获取指数基金净值估算
 
 官方限制非指数类暂停基金净值估算展示。
 **路由**
