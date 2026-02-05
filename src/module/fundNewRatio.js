@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-02-04 23:19:48
+ * @Last Modified time: 2026-02-05 08:07:41
  */
 const { request } = require('../utils/index.js');
 let data = {
@@ -18,9 +18,10 @@ let data = {
 module.exports = async (params = {}) => {
   let { fcode } = params
   let fcodeList = fcode.split(",")
+  console.log('fcodeList: ', fcodeList);
   if (fcodeList.length === 1) {
     const url = `https://fundgz.1234567.com.cn/js/${fcodeList[0]}.js?rt=${new Date().getTime()}`;
-    let resp = await request(url, params);
+    let resp = await request(url);
     try {
       let res = JSON.parse(resp.slice("jsonpgz".length + 1, - 2))
       return {
@@ -35,12 +36,25 @@ module.exports = async (params = {}) => {
     }
   } else {
     let url = ''; fundsRatio = []
-    fcodeList.map(async (item, key) => {
-      url = `https://fundgz.1234567.com.cn/js/${item}.js?rt=${new Date().getTime()}`;
-      let resp = await request(url, params);
-      // let resp = data[item]
-      fundsRatio.push(JSON.parse(resp.slice("jsonpgz".length + 1, - 2)))
-    })
+    for (let index = 0; index < fcodeList.length; index++) {
+      const element = fcodeList[index];
+      url = `https://fundgz.1234567.com.cn/js/${element}.js?rt=${new Date().getTime()}`;
+      let resp = await request(url);
+      try {
+        if (typeof resp === 'string') {
+          let parseJson = resp.slice("jsonpgz".length + 1, - 2)
+          console.log('parseJson: ', parseJson, parseJson.length);
+          if (parseJson.length) {
+            fundsRatio.push(JSON.parse(parseJson))
+          }
+        } else {
+          console.log('resp: ', resp.code);
+        }
+      } catch (e) {
+        console.log('e: ', e);
+
+      }
+    }
     return {
       code: 200,
       data: fundsRatio
