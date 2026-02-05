@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-02-05 12:44:11
+ * @Last Modified time: 2026-02-05 13:01:55
  */
 const { request, get } = require('../utils/index.js');
 let data = {
@@ -40,7 +40,7 @@ module.exports = async (params = {}) => {
       url = `https://fundgz.1234567.com.cn/js/${element}.js?rt=${new Date().getTime()}`;
       let resp = await get(url);
       try {
-        if (typeof resp === 'string') {
+        if (resp.data && typeof resp === 'string') {
           let parseJson = resp.slice("jsonpgz".length + 1, - 2)
           if (parseJson.length) {
             fundsRatio.push(JSON.parse(parseJson))
