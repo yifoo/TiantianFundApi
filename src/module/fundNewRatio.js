@@ -3,9 +3,9 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-02-05 09:04:47
+ * @Last Modified time: 2026-02-05 12:24:08
  */
-const { request } = require('../utils/index.js');
+const { request, get } = require('../utils/index.js');
 let data = {
   '000217': 'jsonpgz({"fundcode":"022365","name":"华安黄金ETF联接C","jzrq":"2026-02-03","dwjz":"3.8040","gsz":"3.6918","gszzl":"-2.95","gztime":"2026-02-04 15:00"});',
   '025209': 'jsonpgz({"fundcode":"025209","name":"永赢先锋半导体智选混合C","jzrq":"2026-02-03","dwjz":"3.8040","gsz":"3.6918","gszzl":"-2.95","gztime":"2026-02-04 15:00"});',
@@ -18,10 +18,9 @@ let data = {
 module.exports = async (params = {}) => {
   let { fcode } = params
   let fcodeList = fcode.split(",")
-  console.log('fcodeList: ', fcodeList);
   if (fcodeList.length === 1) {
     const url = `https://fundgz.1234567.com.cn/js/${fcodeList[0]}.js?rt=${new Date().getTime()}`;
-    let resp = await request(url);
+    let resp = await get(url);
     try {
       let res = JSON.parse(resp.slice("jsonpgz".length + 1, - 2))
       return {
@@ -39,7 +38,7 @@ module.exports = async (params = {}) => {
     for (let index = 0; index < fcodeList.length; index++) {
       const element = fcodeList[index];
       url = `https://fundgz.1234567.com.cn/js/${element}.js?rt=${new Date().getTime()}`;
-      let resp = await request(url);
+      let resp = await get(url);
       try {
         if (typeof resp === 'string') {
           let parseJson = resp.slice("jsonpgz".length + 1, - 2)
