@@ -70,6 +70,7 @@ const get = async (url, params, header) => {
     });
     return res.data;
   } catch (e) {
+    console.log('e: ', e);
     return {
       code: 400,
       error: e

@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-02-05 12:24:08
+ * @Last Modified time: 2026-02-05 12:44:11
  */
 const { request, get } = require('../utils/index.js');
 let data = {
@@ -44,13 +44,14 @@ module.exports = async (params = {}) => {
           let parseJson = resp.slice("jsonpgz".length + 1, - 2)
           if (parseJson.length) {
             fundsRatio.push(JSON.parse(parseJson))
+          } else {
+            fundsRatio.push({ "fundcode": element })
           }
         } else {
           console.log('resp: ', resp.code);
         }
       } catch (e) {
         console.log('e: ', e);
-
       }
     }
     return {
