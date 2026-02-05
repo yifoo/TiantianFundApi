@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-02-05 13:01:55
+ * @Last Modified time: 2026-02-05 13:19:53
  */
 const { request, get } = require('../utils/index.js');
 let data = {
@@ -39,19 +39,23 @@ module.exports = async (params = {}) => {
       const element = fcodeList[index];
       url = `https://fundgz.1234567.com.cn/js/${element}.js?rt=${new Date().getTime()}`;
       let resp = await get(url);
-      try {
-        if (resp.data && typeof resp === 'string') {
-          let parseJson = resp.slice("jsonpgz".length + 1, - 2)
-          if (parseJson.length) {
-            fundsRatio.push(JSON.parse(parseJson))
+      if (resp.code === 200) {
+        try {
+          if (resp.data && typeof resp.data === 'string') {
+            let parseJson = resp.data.slice("jsonpgz".length + 1, - 2)
+            if (parseJson.length) {
+              fundsRatio.push(JSON.parse(parseJson))
+            } else {
+              fundsRatio.push({ "fundcode": element })
+            }
           } else {
-            fundsRatio.push({ "fundcode": element })
+            console.log('resp: ', resp.code);
           }
-        } else {
-          console.log('resp: ', resp.code);
+        } catch (e) {
+          console.log('efuu: ', e);
         }
-      } catch (e) {
-        console.log('e: ', e);
+      } else {
+        fundsRatio.push({ "fundcode": element })
       }
     }
     return {

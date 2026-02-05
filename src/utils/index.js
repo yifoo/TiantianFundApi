@@ -68,12 +68,12 @@ const get = async (url, params, header) => {
       httpsAgent,
       timeout: 30000
     });
-    return res.data;
+    return { code: res.status, data: res.data };
   } catch (e) {
-    console.log('e: ', e);
+    console.log('eindex: ', e);
     return {
       code: 400,
-      error: e
+      error: 'AxiosError'
     }
   }
 };

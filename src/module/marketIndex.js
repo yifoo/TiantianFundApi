@@ -54,7 +54,7 @@ module.exports = async (params = {}, ctx) => {
     let res = await get(url, params, header);
     return {
       code: 200,
-      data: res.data || {}
+      data: res.data.data || {}
     }
   } catch (e) {
     console.log('e: ', e);

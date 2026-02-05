@@ -19,7 +19,7 @@ module.exports = async (params = {}) => {
     // //* f3:涨幅
     // //* f12:股票code
     // //* f14:股票名称
-    const fundsPriceLimit = resp2.data.diff
+    const fundsPriceLimit = resp2.data.data.diff
     const result = new Map();
     fundsPriceLimit.forEach(item => {
       result.set(item.f12, item);
