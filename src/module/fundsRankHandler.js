@@ -46,32 +46,34 @@ module.exports = async (params = {}, ctx) => {
   try {
     // 提取JSON对象部分
     var rankData = {}
-    eval(res)
-    let datas = rankData.datas
-    let data = []
-    data = datas.map(item => {
-      let arr = item.split(",")
-      return {
-        code: arr[0],
-        short_name: arr[1],
-        date: arr[3],
-        JJJZ: arr[4],
-        LJJZ: arr[5],
-        dayRatio: arr[6],
-        oneWeek: arr[7],
-        oneMonth: arr[8],
-        threeMonth: arr[9],
-        sixMonth: arr[10],
-        oneYear: arr[11],
-        twoYear: arr[12],
-        threeYear: arr[13],
-        thisYear: arr[14],
-        created: arr[15],
-        createdDate: arr[16],
-        serviceFee: arr[20],
-      }
-    })
-    rankData.datas = data
+    if (res.code === 200) {
+      eval(res.data)
+      let datas = rankData.datas
+      let data = []
+      data = datas.map(item => {
+        let arr = item.split(",")
+        return {
+          code: arr[0],
+          short_name: arr[1],
+          date: arr[3],
+          JJJZ: arr[4],
+          LJJZ: arr[5],
+          dayRatio: arr[6],
+          oneWeek: arr[7],
+          oneMonth: arr[8],
+          threeMonth: arr[9],
+          sixMonth: arr[10],
+          oneYear: arr[11],
+          twoYear: arr[12],
+          threeYear: arr[13],
+          thisYear: arr[14],
+          created: arr[15],
+          createdDate: arr[16],
+          serviceFee: arr[20],
+        }
+      })
+      rankData.datas = data
+    }
     return {
       code: 200,
       data: rankData,
