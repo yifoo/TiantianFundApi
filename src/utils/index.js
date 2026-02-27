@@ -62,11 +62,14 @@ const request = async (url, params, header) => {
 const get = async (url, params, header) => {
   try {
     const res = await axios.get(url, {
-      headers: header,
+      headers: {
+        ...headers,
+        header
+      },
       params,
       httpAgent,
       httpsAgent,
-      timeout: 30000
+      timeout: 300000
     });
     return { code: res.status, data: res.data };
   } catch (e) {
