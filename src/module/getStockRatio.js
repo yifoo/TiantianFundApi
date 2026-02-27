@@ -29,24 +29,32 @@ module.exports = async (params = {}) => {
       "Connection": "keep-alive",
       "traceparent": "00-751878b275c84f96a455daca1f172e39-0000000000000000-01"
     }
-    const resp2 = await get(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f7,f8,f9,f11,f12,f13,f14`, { secids: codeList.join(',') }, header);
+    params = new URLSearchParams(params);
+    let resp2 = await fetch(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f7,f8,f9,f11,f12,f13,f14&secids=${codeList.join(',')}`, {
+      method: 'GET',
+      headers: header
+    });
+    // const resp2 = await get(`https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f7,f8,f9,f11,f12,f13,f14`, { secids: codeList.join(',') }, header);
     // //* f2:股价
     // //* f3:涨幅
     // //* f12:股票code
     // //* f14:股票名称
-    const fundsPriceLimit = resp2.data.data.diff
-    const result = new Map();
-    fundsPriceLimit.forEach(item => {
-      result.set(item.f12, item);
-    });
-    fundStocks.map((item) => {
-      fundsPriceLimit.map(_item => {
-        if (item.GPDM === _item.f12) {
-          item.price = _item.f2
-          item.ratio = _item.f3
-        }
+    if (resp2.ok) {
+      let data = await resp2.json()
+      const fundsPriceLimit = data.data.diff
+      const result = new Map();
+      fundsPriceLimit.forEach(item => {
+        result.set(item.f12, item);
+      });
+      fundStocks.map((item) => {
+        fundsPriceLimit.map(_item => {
+          if (item.GPDM === _item.f12) {
+            item.price = _item.f2
+            item.ratio = _item.f3
+          }
+        })
       })
-    })
+    }
 
     return {
       code: 200,

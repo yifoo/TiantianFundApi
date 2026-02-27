@@ -33,12 +33,13 @@ module.exports = async (params = {}, ctx) => {
   }
   try {
     params = new URLSearchParams(params);
-    let resp = await fetch(`https://push2.eastmoney.com/api/qt/ulist.np/get?${params}`);
-    console.log('resp: ', resp.ok);
+    let resp = await fetch(`https://push2.eastmoney.com/api/qt/ulist.np/get?${params}`, {
+      method: 'GET',
+      headers: header
+    });
     // let resp = await get(url, params, header);
     if (resp.ok) {
       let data = await resp.json()
-      console.log('data: ', data.data);
       return { code: 200, msg: '获取指数成果', data: data.data };
     } else {
       return { code: 400, msg: '抓取失败', data: {} };

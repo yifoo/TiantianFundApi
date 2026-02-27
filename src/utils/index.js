@@ -72,8 +72,8 @@ const get = async (url, params, header) => {
       timeout: 300000
     });
     return { code: res.status, data: res.data };
-  } catch (e) {
-    console.log('eindex: ', e);
+  } catch (err) {
+    console.log('eindex: ', err);
     return {
       code: 400,
       error: 'AxiosError'
