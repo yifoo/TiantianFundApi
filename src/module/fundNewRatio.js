@@ -3,10 +3,15 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-02-09 17:39:57
+ * @Last Modified time: 2026-02-09 17:42:45
  */
 const { get } = require('../utils/index.js');
 
+/**
+ * ? 基金速查网接口
+ * @param {基金代码} code 
+ * @returns {}
+ */
 const getNewNet = async (code) => {
   let url = `https://m.dayfund.cn/ajs/ajaxdata.shtml?showtype=getfundvalue&fundcode=${code}`
   let resp = await get(url);
