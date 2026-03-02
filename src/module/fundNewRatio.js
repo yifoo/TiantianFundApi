@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-02-27 23:05:29
+ * @Last Modified time: 2026-03-02 10:29:16
  */
 const { get } = require('../utils/index.js');
 
@@ -62,6 +62,7 @@ module.exports = async (params = {}) => {
       let resp = await get(url);
       if (resp.code === 200) {
         try {
+          console.log('resp.data: ', resp.data);
           if (resp.data && typeof resp.data === 'string') {
             let data = resp.data.slice("jsonpgz".length + 1, - 2)
             let parseJson = data ? JSON.parse(data) : {}
