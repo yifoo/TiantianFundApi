@@ -1,7 +1,7 @@
 // app.js
 const Koa = require('koa');
 const Router = require('@koa/router');
-const { log } = require('./utils/log');
+const logger = require('./utils/logger');
 const { getModules } = require('./utils');
 const cors = require('koa2-cors');
 
@@ -26,7 +26,7 @@ function startServe() {
       const routerPath = `/${fileName}`;
       const api = require(path);
       app[fileName] = api;
-      log(`✅ 生成业务路由 ${routerPath}`);
+      logger.success(`生成业务路由 ${routerPath}`);
       router.get(routerPath, async (ctx) => {
         ctx.status = 200;
         ctx.body = await api(ctx.request.query, ctx);
@@ -38,7 +38,7 @@ function startServe() {
 
     // ---------- 6️⃣ 启动服务器 ----------
     const server = app.listen(3002, () => {
-      log('🚀 server is running at port 3002');
+      logger.success('🚀 server is running at port 3002');
       resolve(server);
     });
   });

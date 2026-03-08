@@ -3,9 +3,10 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-03-03 12:49:01
+ * @Last Modified time: 2026-03-08 23:19:44
  */
 const { get } = require('../utils/index.js');
+const logger = require('../utils/logger.js');
 
 /**
  * ? 基金速查网接口
@@ -55,9 +56,9 @@ module.exports = async (params = {}) => {
     }
 
   } else {
-    let url = ''; fundsRatio = []
-    for (let index = 0; index < fcodeList.length; index++) {
-      const element = fcodeList[index];
+    let url = '';
+    // 并发执行，单只失败不阻断整体
+    const results = await Promise.allSettled(fcodeList.map(async (element) => {
       url = `https://fundgz.1234567.com.cn/js/${element}.js?rt=${new Date().getTime()}`;
       let resp = await get(url);
       if (resp.code === 200) {
@@ -65,29 +66,30 @@ module.exports = async (params = {}) => {
           if (resp.data && typeof resp.data === 'string') {
             let data = resp.data.slice("jsonpgz".length + 1, - 2)
             let parseJson = data ? JSON.parse(data) : {}
-            console.log('Object.keys ', element, Object.keys(parseJson).length, parseInt(parseJson.gszzl));
+            logger.warn('Object.keys ', element, Object.keys(parseJson).length, parseJson.gszzl);
             if (Object.keys(parseJson).length && parseJson.gszzl != "0.00") {
-              fundsRatio.push(parseJson)
+              return parseJson
             } else {
               let data = await getNewNet(element)
-              console.log('element:1 ', element);
-              fundsRatio.push(data)
+              logger.info('element:1 ', element);
+              return data
             }
           } else {
-            console.log('resp: ', resp.code);
+            logger.info('resp: ', resp.code);
           }
         } catch (e) {
-          console.log('efuu: ', e);
+          logger.info('efuu: ', e);
         }
       } else {
-        console.log('element: ', element);
+        logger.info('element: ', element);
         let data = await getNewNet(element)
-        fundsRatio.push(data)
+        return data
       }
-    }
+    }));
+
     return {
       code: 200,
-      data: fundsRatio
+      data: results
     }
   }
 
