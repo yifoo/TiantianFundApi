@@ -3,7 +3,7 @@
  * @Date: 2025-11-26 07:32:14 
  * @Desc: 获取昨日准确基金持仓数据
  * @Last Modified by: wuhao
- * @Last Modified time: 2026-03-08 23:19:44
+ * @Last Modified time: 2026-03-08 23:22:18
  */
 const { get } = require('../utils/index.js');
 const logger = require('../utils/logger.js');
@@ -66,7 +66,6 @@ module.exports = async (params = {}) => {
           if (resp.data && typeof resp.data === 'string') {
             let data = resp.data.slice("jsonpgz".length + 1, - 2)
             let parseJson = data ? JSON.parse(data) : {}
-            logger.warn('Object.keys ', element, Object.keys(parseJson).length, parseJson.gszzl);
             if (Object.keys(parseJson).length && parseJson.gszzl != "0.00") {
               return parseJson
             } else {
