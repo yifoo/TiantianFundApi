@@ -1,6 +1,6 @@
 const assert = require('assert');
 const axios = require('axios');
-const host = 'http://localhost:3000';
+const host = `http://localhost:${process.env.PORT || 3000}`;
 
 describe('经理接口', function () {
   it('获取基金经理信息', async function () {

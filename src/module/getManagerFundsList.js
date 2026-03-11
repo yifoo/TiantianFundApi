@@ -1,11 +1,27 @@
-/*
- * @Author: wuhao 
- * @Date: 2025-12-27 00:10:03 
- * @Desc: 获取基金经理曾经管理的基金列表
- * @Last Modified by: wuhao
- * @Last Modified time: 2025-12-27 01:45:08
+/**
+ * @api GET /getManagerFundsList
+ * @desc 获取基金经理的在管/曾管基金列表
+ * @desc 根据 manageType 参数区分返回"当前在管"或"历史曾管"的基金列表，
+ *       支持按多种维度排序，适用于基金经理详情页的基金列表展示。
+ *
+ * @param {string} MGRID          - [必填] 基金经理 ID
+ * @param {number} manageType     - [必填] 1=当前在管基金  2=历史曾管基金
+ * @param {string} [sortColumn]   - 排序字段，例：SYL_1N（近1年）/ ENDNAV（规模）
+ * @param {string} [sort]         - 排序方向，descend（默认降序）/ ascend
+ *
+ * @returns {object}
+ * @returns {number} code              - 200 成功 / 400 失败
+ * @returns {Array}  data              - 基金列表
+ * @returns {string} data[].FCODE      - 基金代码
+ * @returns {string} data[].SHORTNAME  - 基金简称
+ * @returns {string} data[].STARTDATE  - 任职起始日期
+ * @returns {string} data[].ENDDATE    - 任职终止日期（在管则为空）
+ * @returns {string} data[].DWJZ       - 最新单位净值
+ * @returns {string} data[].SYL_1N     - 近1年收益率(%)
+ *
+ * @example GET /getManagerFundsList?MGRID=30249411&manageType=1&sortColumn=SYL_1N
+ * @example GET /getManagerFundsList?MGRID=30249411&manageType=2
  */
-
 const { request } = require('../utils/index.js');
 
 module.exports = async (params = {}) => {

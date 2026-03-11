@@ -1,11 +1,19 @@
-/*
- * @Author: wuhao 
- * @Date: 2025-11-26 23:08:17 
- * @Desc: 获取行业主题列表
- * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-29 10:05:53
+/**
+ * @api GET /getBKList
+ * @desc 获取行业/主题板块列表
+ * @desc 返回基金筛选页可用的全部行业主题板块，含板块代码和名称，
+ *       可将 bkCode 传给 fundsSelect 接口进行行业维度的基金筛选。
+ *
+ * @param {object} params - 无需传入参数
+ *
+ * @returns {object}
+ * @returns {number} code          - 200 成功 / 400 失败
+ * @returns {Array}  data          - 行业板块列表
+ * @returns {string} data[].bkCode - 板块代码
+ * @returns {string} data[].bkName - 板块名称
+ *
+ * @example GET /getBKList
  */
-
 const { request } = require('../utils/index.js');
 
 module.exports = async (params = {}) => {

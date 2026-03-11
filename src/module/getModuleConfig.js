@@ -1,9 +1,18 @@
-/*
- * @Author: wuhao 
- * @Date: 2025-11-26 07:32:47 
- * @Desc: 获取天天基金基金模块
- * @Last Modified by: wuhao
- * @Last Modified time: 2025-12-07 10:25:28
+/**
+ * @api GET /getModuleConfig
+ * @desc 获取天天基金 App 条件筛选模块配置
+ * @desc 返回基金条件筛选页的动态模块布局配置，定义了各筛选模块的
+ *       展示顺序、标题和子项，适合前端动态渲染筛选面板时使用。
+ *
+ * @param {object} params - 无需传入参数（内部固定查询 ConditionFund 页面配置）
+ *
+ * @returns {object}
+ * @returns {number} code          - 200 成功 / 400 失败
+ * @returns {Array}  data          - 模块配置列表
+ * @returns {string} data[].title  - 模块标题
+ * @returns {Array}  data[].items  - 模块内子项配置
+ *
+ * @example GET /getModuleConfig
  */
 const { request } = require('../utils/index.js');
 

@@ -1,4 +1,18 @@
-
+/**
+ * @api GET /getBkField
+ * @desc 获取行业板块研报数据
+ * @desc 返回指定行业板块（默认申万行业 016 级别）的相关研报列表，
+ *       包含报告标题、机构、发布日期、评级等信息，
+ *       可用于行业研究参考。
+ *
+ * @param {object} params - 无需传入参数（当前固定查询 bkCode=016）
+ *
+ * @returns {object}
+ * @returns {number} code      - 200 成功 / 400 失败
+ * @returns {object} data      - 原始研报接口响应
+ *
+ * @example GET /getBkField
+ */
 const { get } = require('../utils/index.js');
 
 module.exports = async (params = {}) => {

@@ -1,9 +1,23 @@
-/*
- * @Author: wuhao 
- * @Date: 2025-11-26 07:33:04 
- * @Desc: 获取实时基金指数流数据
- * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-26 07:33:28
+/**
+ * @api GET /sse
+ * @desc 订阅指数/股票实时行情推送（SSE 长连接）
+ * @desc 建立 Server-Sent Events 长连接，持续接收东方财富行情推送数据，
+ *       客户端通过 EventSource 监听数据流，适合实时行情看板场景。
+ *       连接建立后服务端会持续推送，客户端断开时连接自动关闭。
+ *
+ * @param {string} secids  - [必填] 行情代码列表，格式 "市场.代码"，逗号分隔
+ *                           例："1.000001,0.399001"（上证+深证）
+ * @param {string} [fields] - 订阅字段，例："f1,f2,f3,f12,f14"
+ *                           f2=最新价 f3=涨跌幅% f12=代码 f14=名称
+ *
+ * @returns {Stream} SSE 数据流（text/event-stream）
+ *          每条推送格式：data: { "data": { "diff": [...] } }
+ *          diff 中各对象字段含义同 marketIndex 接口
+ *
+ * @example
+ *   // 浏览器端使用
+ *   const es = new EventSource('/sse?secids=1.000001,0.399001&fields=f2,f3,f12,f14');
+ *   es.onmessage = (e) => console.log(JSON.parse(e.data));
  */
 const { sse } = require('../utils/index.js');
 

@@ -1,9 +1,19 @@
-/*
- * @Author: wuhao 
- * @Date: 2025-11-26 07:32:47 
- * @Desc: 获取工业公司列表
- * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-29 09:34:41
+/**
+ * @api GET /getIndustryList
+ * @desc 获取行业分类列表
+ * @desc 返回用于基金条件筛选的行业分类树，可与 fundsSelect 接口
+ *       的 bkcodes 参数配合，实现按行业维度的基金筛选。
+ *
+ * @param {object} params - 无需传入参数
+ *
+ * @returns {object}
+ * @returns {number} code          - 200 成功 / 400 失败
+ * @returns {Array}  data          - 行业分类列表
+ * @returns {string} data[].code   - 行业代码
+ * @returns {string} data[].name   - 行业名称
+ * @returns {Array}  data[].child  - 子行业列表（若有）
+ *
+ * @example GET /getIndustryList
  */
 const { request } = require('../utils/index.js');
 

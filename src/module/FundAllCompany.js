@@ -1,9 +1,21 @@
-/*
- * @Author: wuhao 
- * @Date: 2025-11-26 07:32:47 
- * @Desc: 获取全部基金公司列表
- * @Last Modified by: wuhao
- * @Last Modified time: 2025-11-29 09:30:38
+/**
+ * @api GET /FundAllCompany
+ * @desc 获取全部基金公司列表
+ * @desc 返回天天基金平台收录的所有基金公司，含简称、全称、公司代码，
+ *       可用于下拉选择器或公司维度的数据聚合。
+ *
+ * @param {object} params - 无必传参数
+ *
+ * @returns {object}
+ * @returns {number}   code          - 200 成功 / 500 失败
+ * @returns {string}   msg           - 结果描述
+ * @returns {Array}    data          - 公司列表
+ * @returns {string}   data[].label  - 公司简称（SNAME）
+ * @returns {string}   data[].value  - 公司代码（COMPANYCODE）
+ * @returns {string}   data[].ABBNAME - 公司缩写名
+ * @returns {string}   data[].FNAME  - 公司全称
+ *
+ * @example GET /FundAllCompany
  */
 const { request } = require('../utils/index.js');
 

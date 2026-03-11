@@ -1,3 +1,21 @@
+/**
+ * @api GET /stockGet
+ * @desc 获取股票行情快照（全量字段）
+ * @desc 返回指定股票的完整实时行情快照，包含最新价、涨跌幅、成交量、
+ *       成交额、换手率、市盈率、市净率、52周最高/最低等全量字段。
+ *
+ * @param {string} type - [必填] 市场类型：1=上交所  0=深交所
+ * @param {string} code - [必填] 股票代码（不含市场前缀），例：600519
+ *
+ * @returns {object} 原始接口响应（字段以 f 开头，常用字段如下）
+ * @returns {object} data              - 行情快照
+ *                   f43 = 最新价    f3 = 涨跌幅%    f4 = 涨跌额
+ *                   f5  = 成交量    f6 = 成交额      f8 = 换手率%
+ *                   f9  = 市盈率    f23 = 市净率     f57 = 股票代码
+ *                   f58 = 股票名称
+ *
+ * @example GET /stockGet?type=1&code=600519
+ */
 const { request } = require('../utils/index.js');
 
 /**

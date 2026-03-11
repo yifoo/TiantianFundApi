@@ -1,9 +1,28 @@
-/*
- * @Author: wuhao 
- * @Date: 2025-11-26 22:28:41 
- * @Desc: 根据条件筛选基金
- * @Last Modified by: wuhao
- * @Last Modified time: 2025-12-01 10:59:47
+/**
+ * @api GET /fundsSelect
+ * @desc 按条件筛选基金（多维度过滤 + 分页）
+ * @desc 支持按基金类型、风险等级、申购状态、标签（如优选）等
+ *       多维度条件过滤基金，并返回总数，适合高级筛选页面。
+ *
+ * @param {string} sort        - [必填] 排序配置 JSON 字符串
+ *                               key 可选：gsZzl / daySyl / weekSyl / monthSyl /
+ *                                         qsyl / hySyl / yearSyl / twySyl / trySyl /
+ *                                         fySyl / sySyl / lnSyl
+ *                               value：ascend（升序）/ descend（降序）
+ *                               示例：{"yearSyl":"descend"}
+ * @param {number} current     - [必填] 页码，从 1 开始
+ * @param {number} pageSize    - [必填] 每页条数
+ * @param {string} [rsbType]   - 基金类型代码，可从 conditionListForRank 接口获取
+ * @param {string} [bkcodes]   - 行业代码过滤，可从 getBKList 接口获取
+ * @param {string} [stageRanking] - 阶段排名过滤
+ *
+ * @returns {object}
+ * @returns {number} code    - 200 成功 / 400 失败
+ * @returns {string} msg     - 结果描述
+ * @returns {Array}  data    - 符合条件的基金列表
+ * @returns {number} total   - 符合条件的基金总数
+ *
+ * @example GET /fundsSelect?sort={"yearSyl":"descend"}&current=1&pageSize=20
  */
 const { post } = require('../utils/index.js');
 const dayjs = require('dayjs')
