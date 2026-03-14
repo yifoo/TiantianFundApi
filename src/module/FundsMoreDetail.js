@@ -4,8 +4,30 @@
  * @desc 一次性返回基金的全维度信息，包含：基本信息、业绩指标（夏普比率、
  *       最大回撤、标准差）、费率结构、基准跟踪误差、关联主题及相似基金，
  *       适合基金详情页的完整渲染。
+ * @desc 一次请求返回基金全维度数据，包含八个子数据块：
  *
- * @param {string} FCODE - [必填] 基金代码，例：003834
+ *   basic            — 基础信息（净值/规模/费率/业绩基准/定投收益率等）
+ *   periodIncrease   — 各阶段涨跌幅（近1周/月/季/半年/1年/今年/成立以来）
+ *   riskMetrics      — 风险指标（夏普/最大回撤/标准差，含1/3/5年同类排名）
+ *   rateInfo         — 申购赎回费率详情（管理费/托管费/各档申赎费率）
+ *   currentManager   — 现任基金经理（含照片/简介/投资理念/选股逻辑）
+ *   holderStructure  — 持有人结构（个人/机构/内部占比）
+ *   relateTheme      — 持仓关联热门主题板块
+ *   indexDetail      — 跟踪指数信息（仅指数型基金有值，否则为 null）
+ *
+ * 真实响应结构（供参考）：
+ *   resp.data.baseInfo[0]                              → basic
+ *   resp.data.FundPeriodIncrease[]                     → periodIncrease
+ *   resp.data.uniqueInfo[0]                            → riskMetrics
+ *   resp.data.rateInfo                                 → rateInfo
+ *   resp.data.FundManagerInformation.currentManagerInfos[] → currentManager
+ *   resp.data.fundHolderStructure[0]                   → holderStructure
+ *   resp.data.fundRelateTheme[]                        → relateTheme
+ *   resp.data.indexDetail                              → indexDetail
+ *
+ * @param {string}  FCODE    - [必填] 基金代码，例：021528
+ * @param {string}  [plat]   - 平台标识，默认 Iphone
+ * @param {string}  [product]- 产品标识，默认 EFund
  *
  * @returns {object} 原始接口聚合响应（字段极多，以下列出主要部分）
  * @returns {string} SHORTNAME   - 基金简称
